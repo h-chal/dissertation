@@ -10,6 +10,7 @@ typedef Bit#(0) AlwaysTakenTrainInfo;// deriving(Bits, Eq, FShow);
 typedef AlwaysTakenTrainInfo DirPredTrainInfo;
 
 module mkAlwaysTaken(DirPredictor#(AlwaysTakenTrainInfo));
+    // Vector to interfaces since Toooba is superscalar.
     interface pred = replicate(interface DirPred;
         method ActionValue#(DirPredResult#(AlwaysTakenTrainInfo)) pred;
             return DirPredResult {
