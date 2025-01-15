@@ -29,8 +29,8 @@ typedef 12 NumPcBits;
 typedef Bit#(NumPcBits) ChoppedAddr;
 
 typedef struct {
-    Counter counter;
     ChoppedAddr pcChopped;
+    Counter counter;
 } SaturationCounterTrainInfo deriving(Bits, Eq, FShow);
 typedef SaturationCounterTrainInfo DirPredTrainInfo;
 
@@ -49,8 +49,8 @@ module mkSaturationCounter(DirPredictor#(SaturationCounterTrainInfo));
                 return DirPredResult {
                     taken: unpack(truncateLSB(pack(counter))),
                     train: SaturationCounterTrainInfo {
-                        counter: counter,
-                        pcChopped: pcChopped
+                        pcChopped: pcChopped,
+                        counter: counter
                     }
                 };
             endmethod
