@@ -13,6 +13,7 @@ export NumCounterBits;
 export NumPcBits;
 
 // This branch predictor is a generalisation of a bimodal predictor with multiple bits.
+// The MSB of a counter gives the prediction.
 // The predictor size is NumCounterBits * 2^NumPcBits.
 
 // The number of bits in each saturating counter.
@@ -47,6 +48,7 @@ module mkSaturationCounter(DirPredictor#(SaturationCounterTrainInfo));
                 let pcChopped = pcChoppedBase + fromInteger(i);
                 Counter counter = counterTable.sub(pcChopped);
                 return DirPredResult {
+                    // The MSB of a counter gives the prediction.
                     taken: unpack(truncateLSB(pack(counter))),
                     train: SaturationCounterTrainInfo {
                         pcChopped: pcChopped,
