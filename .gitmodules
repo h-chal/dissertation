@@ -1,0 +1,6 @@
+[submodule "ChampSimWrapper/ChampSim"]
+	path = ChampSimWrapper/ChampSim
+	url = git@github.com:h-chal/ChampSim.git
+[submodule "Toooba"]
+	path = Toooba
+	url = git@github.com:bluespec/Toooba.git

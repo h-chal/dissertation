@@ -1,0 +1,6 @@
+{
+    "bsv_predictor": {
+        "predictor": "GSelect"
+    },
+    "num_cores": 1
+}
