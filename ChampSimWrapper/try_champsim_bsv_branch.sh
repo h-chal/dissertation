@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# This script makes and runs ChampSim with the predictor defined in config.json.
+# It ignores any output apart from errors and the conditional branch accuracy.
+# If run with argument `verbose`, the full ChampSim output is given.
+
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 cd "$scriptDir"/ChampSim
 
@@ -11,13 +16,16 @@ CONFIG_FILE="../config.json"
 TIMESTAMP_FILE="../.config.json.timestamp"
 
 # Create a symlink to branch_predictors directory. This is removed at the end.
-ln -fs ../../../../branch_predictors branch/bsv_predictor/Predictors
+test ! -e branch/bsv_predictor/Predictors && ln -s ../../../../branch_predictors branch/bsv_predictor/Predictors
 # A symlink for config. This is because having the config file higher in the file tree causes errors.
-ln -fs "$CONFIG_FILE" symlink_config.json
+ln -s "$CONFIG_FILE" symlink_config.json
 
 CONFIG_COMMAND="./config.sh symlink_config.json"
-CHAMPSIM_COMMAND="make > /dev/null && bin/champsim --warmup-instructions $WARMUP_INSTRUCTIONS --simulation-instructions $SIMULATION_INSTRUCTIONS $TRACE \
-| grep -m 1 \"Branch Prediction Accuracy\" | awk '{print \"Conditional Branch Accuracy: \" \$6}'"
+CHAMPSIM_COMMAND="make > /dev/null && bin/champsim --warmup-instructions $WARMUP_INSTRUCTIONS --simulation-instructions $SIMULATION_INSTRUCTIONS $TRACE"
+PARSE_OUTPUT_COMMAND="| grep -m 1 \"Branch Prediction Accuracy\" | awk '{print \"Conditional Branch Accuracy: \" \$6}'"
+if [[ "$1" != "verbose" ]]; then
+    CHAMPSIM_COMMAND="$CHAMPSIM_COMMAND$PARSE_OUTPUT_COMMAND"
+fi
 
 UNMODIFIED_COMMAND="$CHAMPSIM_COMMAND"
 MODIFIED_COMMAND="echo \"Configuration change detected; reconfiguring\" && $CONFIG_COMMAND && $CHAMPSIM_COMMAND"
