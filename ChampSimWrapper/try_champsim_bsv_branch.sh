@@ -4,16 +4,118 @@
 # It ignores any output apart from errors and the conditional branch accuracy.
 # If run with argument `verbose`, the full ChampSim output is given.
 
+usage() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo " -h, --help               Display this help message"
+    echo " -v, --verbose            See all output from ChampSim"
+    echo " -w NUM, --warmup=NUM     Use NUM warmup instructions"
+    echo " -s NUM, --simulation=NUM Use NUM simulation instructions (count towards branch accuracy)"
+    echo " -t FILE, --trace=FILE    Use FILE (relative to project root) as the trace"
+    echo " -c FILE, --config=FILE   Use FILE (relative to prject root) to configure ChampSim"
+}
+
+# Default values
+VERBOSE=false
+WARMUP_INSTRUCTIONS=200000
+SIMULATION_INSTRUCTIONS=500000
+TRACE="traces/DPC-3/600.perlbench_s-210B.champsimtrace.xz"
+CONFIG_FILE="ChampSimWrapper/config.json"
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        -v | --verbose)
+            VERBOSE=true
+            ;;
+        -w)
+            if [[ ! -z "$2" && "$2" != -* ]]; then
+                WARMUP_INSTRUCTIONS="$2"
+                shift
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        --warmup=*)
+            if [[ -n ${1#*=} ]]; then
+                SIMULATION_INSTRUCTIONS="${1#*=}"
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -s)
+            if [[ ! -z "$2" && "$2" != -* ]]; then
+                SIMULATION_INSTRUCTIONS="$2"
+                shift
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        --simulation=*)
+            if [[ -n ${1#*=} ]]; then
+                SIMULATION_INSTRUCTIONS="${1#*=}"
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -t)
+            if [[ ! -z "$2" && "$2" != -* ]]; then
+                TRACE="$2"
+                shift
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        --trace=*)
+            if [[ -n ${1#*=} ]]; then
+                TRACE="${1#*=}"
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -c)
+            if [[ ! -z "$2" && "$2" != -* ]]; then
+                CONFIG_FILE="$2"
+                shift
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        --config=*)
+            if [[ -n ${1#*=} ]]; then
+                CONFIG_FILE="${1#*=}"
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+TRACE=$(realpath "$TRACE")
+CONFIG_FILE=$(realpath "$CONFIG_FILE")
+
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 cd "$scriptDir"/ChampSim
 
-WARMUP_INSTRUCTIONS=200000
-SIMULATION_INSTRUCTIONS=500000
-TRACE="../../traces/DPC-3/600.perlbench_s-210B.champsimtrace.xz"
-
-CONFIG_FILE="../config.json"
 # File to store the last modification time for CONFIG_FILE.
-TIMESTAMP_FILE="../.config.json.timestamp"
+# E.g. /foo/bar/.config.json.timestamp
+TIMESTAMP_FILE="$(dirname "$CONFIG_FILE")/.$(basename "$CONFIG_FILE").timestamp"
 
 # Create a symlink to branch_predictors directory. This is removed at the end.
 test ! -e branch/bsv_predictor/Predictors && ln -s ../../../../branch_predictors branch/bsv_predictor/Predictors
@@ -23,7 +125,7 @@ ln -s "$CONFIG_FILE" symlink_config.json
 CONFIG_COMMAND="./config.sh symlink_config.json"
 CHAMPSIM_COMMAND="make > /dev/null && bin/champsim --warmup-instructions $WARMUP_INSTRUCTIONS --simulation-instructions $SIMULATION_INSTRUCTIONS $TRACE"
 PARSE_OUTPUT_COMMAND="| grep -m 1 \"Branch Prediction Accuracy\" | awk '{print \"Conditional Branch Accuracy: \" \$6}'"
-if [[ "$1" != "verbose" ]]; then
+if [ "$VERBOSE" = false ]; then
     CHAMPSIM_COMMAND="$CHAMPSIM_COMMAND$PARSE_OUTPUT_COMMAND"
 fi
 
