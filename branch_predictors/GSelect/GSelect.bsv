@@ -47,6 +47,11 @@ typedef struct {
 typedef GSelectTrainInfo DirPredTrainInfo;
 
 module mkGSelect(DirPredictor#(GSelectTrainInfo));
+    staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
+    staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
+    staticAssert(1 <= valueOf(NumGlobalHistoryBits), "Must have 1 <= NumGlobalHistoryBits");
+
+
     // The lower `NumPcBits` bits (minus 2 lowest) of the PC for first instruction in the superscalar batch.
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
