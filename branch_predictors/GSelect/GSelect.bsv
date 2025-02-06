@@ -43,6 +43,7 @@ typedef Bit#(NumIndexBits) Index;
 typedef struct {
     Index index;
     Counter counter;
+    GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 typedef GSelectTrainInfo DirPredTrainInfo;
 
@@ -57,7 +58,6 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     RegFile#(Index, Counter) counterTable <- mkRegFileWCF(0, maxBound);
-
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize,RWire#(Bool)) batchHistory <- replicateM(mkRWire);
     
@@ -97,7 +97,8 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
                     taken: taken,
                     train: GSelectTrainInfo {
                         index: index,
-                        counter: counter
+                        counter: counter,
+                        globalHistory: thisGlobalHistory
                     }
                 };
             endmethod
@@ -106,12 +107,12 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
     interface pred = genWith(superscalarPred);
 
     method Action update(Bool taken, GSelectTrainInfo train, Bool mispred);
-        // TODO correct history. cycles between predict and update matters.
-        // TODO recalculate index based on real history
         counterTable.upd(
             train.index,
             taken ? boundedPlus(train.counter, 1) : boundedMinus(train.counter, 1)
         );
+        if (mispred)
+            globalHistory <= {truncate(train.globalHistory), pack(taken)};
     endmethod
 
     method Action nextPc(Addr pc);
