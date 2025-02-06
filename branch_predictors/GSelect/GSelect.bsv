@@ -29,12 +29,12 @@ typedef UInt#(NumCounterBits) Counter;
 // The number of bits from the PC to index the table of saturating counters.
 // The bits used exclude the two lowest bits of the PC.
 // 1 <= NumPcBits <= BrPred::AddrSz - 2.
-typedef 6 NumPcBits;
+typedef 4 NumPcBits;
 typedef Bit#(NumPcBits) ChoppedAddr;
 
 // The number of global branch results to keep.
 // 1 <= NumGlobalHistoryBits.
-typedef 6 NumGlobalHistoryBits;
+typedef 8 NumGlobalHistoryBits;
 typedef Bit#(NumGlobalHistoryBits) GlobalHistory;
 
 typedef TAdd#(NumPcBits, NumGlobalHistoryBits) NumIndexBits;
