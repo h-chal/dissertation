@@ -64,7 +64,7 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     RegFile#(Index, Counter) counterTable <- mkRegFileWCF(0, maxBound);
     // Registers to store the global history for this superscalar batch.
-    Vector#(SupSize,RWire#(Bool)) batchHistory <- replicateM(mkRWire);
+    Vector#(SupSize,RWire#(Bool)) batchHistory <- replicateM(mkUnsafeRWire);
     
     // Get the global history with relevant predictions for previous instructions in this cycle's batch, excluding i.
     function ActionValue#(GlobalHistory) globalHistoryWithBatchHistoryUpTo(Integer i) = actionvalue
