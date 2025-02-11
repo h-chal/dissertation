@@ -1,4 +1,9 @@
+`ifdef USING_TOOOBA
+import Types::*;
+import ProcTypes::*;
+`endif
 import BrPred::*;
+
 
 import Vector::*;
 import RegFile::*;

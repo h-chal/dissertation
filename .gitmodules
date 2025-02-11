@@ -3,4 +3,4 @@
 	url = git@github.com:h-chal/ChampSim.git
 [submodule "Toooba"]
 	path = TooobaWrapper/Toooba
-	url = git@github.com:bluespec/Toooba.git
+	url = git@github.com:h-chal/Toooba.git
