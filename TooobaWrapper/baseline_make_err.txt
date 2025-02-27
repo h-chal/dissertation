@@ -1,0 +1,1741 @@
+Warning: "../../src_Testbench/SoC/Mem_Controller.bsv", line 239, column 8: (G0010)
+  Rule "set_addr_map" was treated as more urgent than
+  "rl_miss_clean_req". Conflicts:
+    "set_addr_map" cannot fire before "rl_miss_clean_req":
+      calls to
+	rg_addr_base.write vs. rg_addr_base.read
+	rg_addr_lim.write vs. rg_addr_lim.read
+    "rl_miss_clean_req" cannot fire before "set_addr_map":
+      calls to rg_state.write vs. rg_state.read
+Warning: "../../src_Testbench/SoC/Mem_Controller.bsv", line 239, column 8: (G0010)
+  Rule "rl_external_reset" was treated as more urgent than
+  "rl_miss_clean_req". Conflicts:
+    "rl_external_reset" cannot fire before "rl_miss_clean_req":
+      calls to
+	rg_state.write vs. rg_state.read
+	f_raw_mem_reqs_rv.port2__write vs. f_raw_mem_reqs_rv.port1__write
+	f_raw_mem_reqs_rv.port2__write vs. f_raw_mem_reqs_rv.port1__read
+    "rl_miss_clean_req" cannot fire before "rl_external_reset":
+      calls to rg_state.write vs. rg_state.read
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave" cannot fire before "fabric_rl_wr_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+    "fabric_rl_wr_xaction_master_to_slave_3" cannot fire before "fabric_rl_wr_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+    "fabric_rl_wr_xaction_master_to_slave_4" cannot fire before "fabric_rl_wr_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_2" cannot fire before "fabric_rl_wr_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+    "fabric_rl_wr_xaction_master_to_slave_5" cannot fire before "fabric_rl_wr_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_no_such_slave" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_data". Conflicts:
+    "fabric_rl_wr_xaction_no_such_slave" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data":
+      calls to
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.first
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.deq
+    "fabric_rl_wr_xaction_master_to_slave_data" cannot fire before "fabric_rl_wr_xaction_no_such_slave":
+      calls to
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.deq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_no_such_slave_1" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_data_1". Conflicts:
+    "fabric_rl_wr_xaction_no_such_slave_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data_1":
+      calls to
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.first
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.deq
+    "fabric_rl_wr_xaction_master_to_slave_data_1" cannot fire before "fabric_rl_wr_xaction_no_such_slave_1":
+      calls to
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.deq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_data" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_data_1". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_data" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data_1":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+    "fabric_rl_wr_xaction_master_to_slave_data_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_rd_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave" cannot fire before "fabric_rl_rd_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+    "fabric_rl_rd_xaction_master_to_slave_3" cannot fire before "fabric_rl_rd_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_1" cannot fire before "fabric_rl_rd_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+    "fabric_rl_rd_xaction_master_to_slave_4" cannot fire before "fabric_rl_rd_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 101, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_2" cannot fire before "fabric_rl_rd_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+    "fabric_rl_rd_xaction_master_to_slave_5" cannot fire before "fabric_rl_rd_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave" cannot fire before "fabric_rl_wr_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+    "fabric_rl_wr_xaction_master_to_slave_3" cannot fire before "fabric_rl_wr_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+    "fabric_rl_wr_xaction_master_to_slave_4" cannot fire before "fabric_rl_wr_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_2" cannot fire before "fabric_rl_wr_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+    "fabric_rl_wr_xaction_master_to_slave_5" cannot fire before "fabric_rl_wr_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_no_such_slave" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_data". Conflicts:
+    "fabric_rl_wr_xaction_no_such_slave" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data":
+      calls to
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.first
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.deq
+    "fabric_rl_wr_xaction_master_to_slave_data" cannot fire before "fabric_rl_wr_xaction_no_such_slave":
+      calls to
+	fabric_xactors_from_masters_0_f_wr_data.deq vs. fabric_xactors_from_masters_0_f_wr_data.deq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_no_such_slave_1" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_data_1". Conflicts:
+    "fabric_rl_wr_xaction_no_such_slave_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data_1":
+      calls to
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.first
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.deq
+    "fabric_rl_wr_xaction_master_to_slave_data_1" cannot fire before "fabric_rl_wr_xaction_no_such_slave_1":
+      calls to
+	fabric_xactors_from_masters_1_f_wr_data.deq vs. fabric_xactors_from_masters_1_f_wr_data.deq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_data" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_data_1". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_data" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data_1":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+    "fabric_rl_wr_xaction_master_to_slave_data_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_rd_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave" cannot fire before "fabric_rl_rd_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+    "fabric_rl_rd_xaction_master_to_slave_3" cannot fire before "fabric_rl_rd_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_1" cannot fire before "fabric_rl_rd_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+    "fabric_rl_rd_xaction_master_to_slave_4" cannot fire before "fabric_rl_rd_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+Warning: "../../src_Testbench/SoC/SoC_Fabric.bsv", line 37, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_2" cannot fire before "fabric_rl_rd_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+    "fabric_rl_rd_xaction_master_to_slave_5" cannot fire before "fabric_rl_rd_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `respQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `respQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `reqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `reqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_0_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_0_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_1_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_1_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_2_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_2_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_3_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_tlbRam_3_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_repRam_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlb4KB_m_repRam_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlbReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `tlbReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `transCacheReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `transCacheReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `rqFromCQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `rqFromCQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `rsToCQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `rsToCQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/SelfInvL1Bank.bsv", line 394, column 26: (T0054)
+  Field not defined: `isPrefetchRq'
+Warning: "../../src_Core/RISCY_OOO/coherence/src/SelfInvIBank.bsv", line 241, column 26: (T0054)
+  Field not defined: `isPrefetchRq'
+Warning: "../../src_Core/RISCY_OOO/procs/lib/L1CoCache.bsv", line 98, column 8: (G0022)
+  According to the generated schedule, method `stuck_get' is never ready.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_sendRsToP_pRq_enqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_sendRsToP_pRq_deqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_pipelineResp_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_pipelineResp_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/L1CoCache.bsv", line 109, column 8: (G0022)
+  According to the generated schedule, method `stuck_get' is never ready.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_0_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_0_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_1_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_1_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_2_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_2_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_3_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_3_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/L1CoCache.bsv", line 293, column 8: (G0022)
+  According to the generated schedule, method `stuck_get' is never ready.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_sendRsToP_pRq_enqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_sendRsToP_pRq_deqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_pipelineResp_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_releaseEntryQ_pipelineResp_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/L1CoCache.bsv", line 328, column 8: (G0022)
+  According to the generated schedule, method `stuck_get' is never ready.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_0_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_0_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_1_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_1_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_2_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_2_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_3_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_3_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/IBank.bsv", line 303, column 10: (G0023)
+  The condition for rule `m_createPrefetchRq' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/IBank.bsv", line 413, column 10: (G0023)
+  The condition for rule `m_sendPrefetchRqToP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_rqFromCQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_rqFromCQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/IBank.bsv", line 234, column 10: (G0023)
+  The body of rule `m_print_cRqIndexQ_len' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/L1CoCache.bsv", line 346, column 8: (G0010)
+  Rule "to_proc_resp_get" was treated as more urgent than
+  "m_discardPrefetchRqResult". Conflicts:
+    "to_proc_resp_get" cannot fire before "m_discardPrefetchRqResult":
+      calls to
+	m_cRqMshr.sendRsToC_releaseEntry vs. m_cRqMshr.prefetcher_releaseEntry
+	m_removedCRqs.incrA vs. m_removedCRqs.incrA
+    "m_discardPrefetchRqResult" cannot fire before "to_proc_resp_get":
+      calls to
+	m_cRqMshr.prefetcher_releaseEntry vs. m_cRqMshr.sendRsToC_releaseEntry
+	m_removedCRqs.incrA vs. m_removedCRqs.incrA
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/MemExePipeline.bsv", line 136, column 8: (G0010)
+  Rule "deqProcResp" was treated as more urgent than
+  "m_doPoisonedProcResp". Conflicts:
+    "deqProcResp" cannot fire before "m_doPoisonedProcResp":
+      calls to
+	m_pendValid_0_lat_0.wset vs. m_pendValid_0_lat_0.wset
+	m_pendValid_0_dummy2_0.write vs. m_pendValid_0_dummy2_0.read
+	m_pendValid_1_lat_0.wset vs. m_pendValid_1_lat_0.wset
+	m_pendValid_1_dummy2_0.write vs. m_pendValid_1_dummy2_0.read
+	m_pendValid_2_lat_0.wset vs. m_pendValid_2_lat_0.wset
+	m_pendValid_2_dummy2_0.write vs. m_pendValid_2_dummy2_0.read
+	m_pendValid_3_lat_0.wset vs. m_pendValid_3_lat_0.wset
+	m_pendValid_3_dummy2_0.write vs. m_pendValid_3_dummy2_0.read
+	m_wrongSpec_procResp_conflict.wset vs. m_wrongSpec_procResp_conflict.wset
+	m_freeQ_enqReq_lat_0.wset vs. m_freeQ_enqReq_lat_0.wset
+    "m_doPoisonedProcResp" cannot fire before "deqProcResp":
+      calls to
+	m_pendValid_0_lat_0.wset vs. m_pendValid_0_lat_0.wset
+	m_pendValid_0_dummy2_0.write vs. m_pendValid_0_dummy2_0.read
+	m_pendValid_1_lat_0.wset vs. m_pendValid_1_lat_0.wset
+	m_pendValid_1_dummy2_0.write vs. m_pendValid_1_dummy2_0.read
+	m_pendValid_2_lat_0.wset vs. m_pendValid_2_lat_0.wset
+	m_pendValid_2_dummy2_0.write vs. m_pendValid_2_dummy2_0.read
+	m_pendValid_3_lat_0.wset vs. m_pendValid_3_lat_0.wset
+	m_pendValid_3_dummy2_0.write vs. m_pendValid_3_dummy2_0.read
+	m_wrongSpec_procResp_conflict.wset vs. m_wrongSpec_procResp_conflict.wset
+	m_freeQ_enqReq_lat_0.wset vs. m_freeQ_enqReq_lat_0.wset
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/MemExePipeline.bsv", line 136, column 8: (G0010)
+  Rule "specUpdate_incorrectSpeculation" was treated as more urgent than
+  "m_doPoisonedProcResp". Conflicts:
+    "specUpdate_incorrectSpeculation" cannot fire before "m_doPoisonedProcResp":
+      calls to
+	m_pendPoisoned_0.write vs. m_pendPoisoned_0.read
+	m_pendPoisoned_1.write vs. m_pendPoisoned_1.read
+	m_pendPoisoned_2.write vs. m_pendPoisoned_2.read
+	m_pendPoisoned_3.write vs. m_pendPoisoned_3.read
+	m_wrongSpec_procResp_conflict.wset vs. m_wrongSpec_procResp_conflict.wset
+    "m_doPoisonedProcResp" cannot fire before "specUpdate_incorrectSpeculation":
+      calls to
+	m_wrongSpec_procResp_conflict.wset vs. m_wrongSpec_procResp_conflict.wset
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/MemExePipeline.bsv", line 136, column 8: (G0010)
+  Rule "specUpdate_incorrectSpeculation" was treated as more urgent than
+  "m_doPRs". Conflicts:
+    "specUpdate_incorrectSpeculation" cannot fire before "m_doPRs":
+      calls to
+	m_pendPoisoned_0.write vs. m_pendPoisoned_0.read
+	m_pendPoisoned_1.write vs. m_pendPoisoned_1.read
+	m_pendPoisoned_2.write vs. m_pendPoisoned_2.read
+	m_pendPoisoned_3.write vs. m_pendPoisoned_3.read
+	m_wrongSpec_doPRs_conflict.wset vs. m_wrongSpec_doPRs_conflict.wset
+    "m_doPRs" cannot fire before "specUpdate_incorrectSpeculation":
+      calls to
+	m_wrongSpec_doPRs_conflict.wset vs. m_wrongSpec_doPRs_conflict.wset
+Warning: "../../src_Core/RISCY_OOO/connectal/bsv/ConnectalBramFifo.bsv", line 159, column 94: (T0054)
+  Field not defined: `clear'
+Warning: "../../src_Core/RISCY_OOO/connectal/bsv/ConnectalBramFifo.bsv", line 169, column 93: (T0054)
+  Field not defined: `clear'
+Warning: "../../src_Core/RISCY_OOO/procs/lib/MemLoader.bsv", line 98, column 8: (G0010)
+  Rule "mmio_req" was treated as more urgent than "doNewWrite". Conflicts:
+    "mmio_req" cannot fire before "doNewWrite":
+      calls to busy.write vs. busy.read
+    "doNewWrite" cannot fire before "mmio_req":
+      calls to busy.write vs. busy.read
+Warning: "../../src_Core/RISCY_OOO/procs/lib/MemLoader.bsv", line 98, column 8: (G0010)
+  Rule "doStResp" was treated as more urgent than "doStReq". Conflicts:
+    "doStResp" cannot fire before "doStReq":
+      calls to
+	writing.write vs. writing.read
+	pendStCnt.write vs. pendStCnt.read
+    "doStReq" cannot fire before "doStResp":
+      calls to
+	pendStCnt.write vs. pendStCnt.read
+	expectWrData.write vs. expectWrData.read
+Warning: "../../src_Core/RISCY_OOO/procs/lib/LLCache.bsv", line 139, column 8: (G0022)
+  According to the generated schedule, method `stuck_get' is never ready.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_0_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_1_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_2_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_3_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_4_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_4_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_5_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_5_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_6_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_6_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_7_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_7_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_8_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_8_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_9_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_9_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_10_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_10_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_11_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_11_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_12_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_12_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_13_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_13_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_14_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_14_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_15_rdReqQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_infoRam_15_rdReqQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_repRam_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_rdReqQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_dataRam_rdReqQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/CrossBar.bsv", line 61, column 14: (G0023)
+  The condition for rule `cache_dataPrefetchers_srcPropose' is always false.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/CrossBar.bsv", line 61, column 14: (G0023)
+  The condition for rule `cache_instrPrefetchers_srcPropose' is always false.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `cache_dataPrefetchers_prefetchRq_enqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `cache_dataPrefetchers_prefetchRq_deqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `cache_instrPrefetchers_prefetchRq_enqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `cache_instrPrefetchers_prefetchRq_deqP_canon' has no
+  actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/LLCache.bsv", line 297, column 8: (G0010)
+  Rule "cache_discardPrefetchRqResult" was treated as more urgent than
+  "cache_sendRsLdToDma". Conflicts:
+    "cache_discardPrefetchRqResult" cannot fire before "cache_sendRsLdToDma":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+    "cache_sendRsLdToDma" cannot fire before "cache_discardPrefetchRqResult":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+Warning: "../../src_Core/RISCY_OOO/procs/lib/LLCache.bsv", line 297, column 8: (G0010)
+  Rule "cache_sendRsLdToDma" was treated as more urgent than
+  "cache_sendRsStToDma". Conflicts:
+    "cache_sendRsLdToDma" cannot fire before "cache_sendRsStToDma":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+    "cache_sendRsStToDma" cannot fire before "cache_sendRsLdToDma":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+Warning: "../../src_Core/RISCY_OOO/procs/lib/LLCache.bsv", line 297, column 8: (G0010)
+  Rule "cache_sendRsStToDma" was treated as more urgent than
+  "cache_sendRsToC". Conflicts:
+    "cache_sendRsStToDma" cannot fire before "cache_sendRsToC":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+    "cache_sendRsToC" cannot fire before "cache_sendRsStToDma":
+      calls to
+	cache_cRqMshr.sendRsToDmaC_releaseEntry vs. cache_cRqMshr.sendRsToDmaC_releaseEntry
+Warning: "../../src_Core/RISCY_OOO/fpgautils/lib/XilinxFpu.bsv", line 255, column 27: (P0200)
+  No scheduling annotation given between method `fma' and method `fma'
+  Assuming conflict-free.
+Warning: "../../src_Core/RISCY_OOO/fpgautils/lib/XilinxFpu.bsv", line 267, column 27: (P0200)
+  No scheduling annotation given between method `div' and method `div'
+  Assuming conflict-free.
+Warning: "../../src_Core/RISCY_OOO/fpgautils/lib/XilinxFpu.bsv", line 279, column 27: (P0200)
+  No scheduling annotation given between method `sqrt' and method `sqrt'
+  Assuming conflict-free.
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 392, column 26: (P0102)
+  Declaration of `max_val' shadows previous declaration at
+  "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 312, column 14
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 404, column 26: (P0102)
+  Declaration of `max_val' shadows previous declaration at
+  "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 312, column 14
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 81, column 8: (G0010)
+  Rule "int_div_work" was treated as more urgent than
+  "fpu_s2_stage". Conflicts:
+    "int_div_work" cannot fire before "fpu_s2_stage":
+      calls to int_div_rg_done.write vs. int_div_rg_done.read
+    "fpu_s2_stage" cannot fire before "int_div_work":
+      calls to
+	int_div_rg_f.write vs. int_div_rg_f.read
+	int_div_rg_index.write vs. int_div_rg_index.read
+	int_div_rg_done.write vs. int_div_rg_done.read
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Fpu.bsv", line 92, column 8: (G0010)
+  Rule "int_sqrt_work" was treated as more urgent than
+  "fpu_s2_stage". Conflicts:
+    "int_sqrt_work" cannot fire before "fpu_s2_stage":
+      calls to int_sqrt_rg_busy.write vs. int_sqrt_rg_busy.read
+    "fpu_s2_stage" cannot fire before "int_sqrt_work":
+      calls to
+	int_sqrt_rg_res.write vs. int_sqrt_rg_res.read
+	int_sqrt_rg_s.write vs. int_sqrt_rg_s.read
+	int_sqrt_rg_r.write vs. int_sqrt_rg_r.read
+	int_sqrt_rg_b.write vs. int_sqrt_rg_b.read
+	int_sqrt_rg_busy.write vs. int_sqrt_rg_busy.read
+	int_sqrt_rg_index.write vs. int_sqrt_rg_index.read
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 594, column 16: (P0102)
+  Declaration of `decode_result' shadows previous declaration at
+  "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 566, column
+  10
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 601, column 16: (P0102)
+  Declaration of `dInst' shadows previous declaration at
+  "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 567, column
+  10
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 602, column 16: (P0102)
+  Declaration of `regs' shadows previous declaration at
+  "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 568, column
+  10
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `napTrainByDecQ_enqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `napTrainByDecQ_deqP_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0010)
+  Rule "iTlbIfc_to_proc_response_get" was treated as more urgent than
+  "getTlbResp". Conflicts:
+    "iTlbIfc_to_proc_response_get" cannot fire before "getTlbResp":
+      calls to iTlb.to_proc_response_get vs. iTlb.to_proc_response_get
+    "getTlbResp" cannot fire before "iTlbIfc_to_proc_response_get":
+      calls to iTlb.to_proc_response_get vs. iTlb.to_proc_response_get
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0010)
+  Rule "iTlbIfc_to_proc_request_put" was treated as more urgent than
+  "doFetch1". Conflicts:
+    "iTlbIfc_to_proc_request_put" cannot fire before "doFetch1":
+      calls to iTlb.to_proc_request_put vs. iTlb.to_proc_request_put
+    "doFetch1" cannot fire before "iTlbIfc_to_proc_request_put":
+      calls to iTlb.to_proc_request_put vs. iTlb.to_proc_request_put
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0010)
+  Rule "iMemIfc_to_proc_request_put" was treated as more urgent than
+  "doFetch1". Conflicts:
+    "iMemIfc_to_proc_request_put" cannot fire before "doFetch1":
+      calls to iMem.to_proc_request_put vs. iMem.to_proc_request_put
+    "doFetch1" cannot fire before "iMemIfc_to_proc_request_put":
+      calls to iMem.to_proc_request_put vs. iMem.to_proc_request_put
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0010)
+  Rule "start" was treated as more urgent than "doFetch1". Conflicts:
+    "start" cannot fire before "doFetch1":
+      calls to
+	started.write vs. started.read
+	waitForRedirect_dummy2_0.write vs. waitForRedirect_dummy2_0.read
+	waitForFlush_dummy2_0.write vs. waitForFlush_dummy2_0.read
+	pc_reg_lat_0.wset vs. pc_reg_lat_0.wset
+	pc_reg_dummy2_0.write vs. pc_reg_dummy2_0.read
+    "doFetch1" cannot fire before "start":
+      calls to pc_reg_lat_0.wset vs. pc_reg_lat_0.wset
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0010)
+  Rule "iMemIfc_to_proc_response_get" was treated as more urgent than
+  "doFetch2". Conflicts:
+    "iMemIfc_to_proc_response_get" cannot fire before "doFetch2":
+      calls to iMem.to_proc_response_get vs. iMem.to_proc_response_get
+    "doFetch2" cannot fire before "iMemIfc_to_proc_response_get":
+      calls to iMem.to_proc_response_get vs. iMem.to_proc_response_get
+Warning: "../../src_Core/RISCY_OOO/procs/RV64G_OOO/FetchStage.bsv", line 249, column 8: (G0036)
+  Rule "start" will appear to fire before "stop" when both fire in the same
+  clock cycle, affecting:
+    calls to started.write vs. started.write
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 116, column 10: (G0023)
+  The condition for rule `m_m_canon_deqP' is always false. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `m_m_deqP_ehr_canon' has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/coherence/src/L1Bank.bsv", line 484, column 10: (G0023)
+  The condition for rule
+  `coreFix_memExe_dMem_cache_m_banks_0_sendPrefetchRqToP' is always false.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule
+  `coreFix_memExe_dMem_cache_m_banks_0_prefetcher_m_strideTable_rdReqQ_deqP_canon'
+  has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule
+  `coreFix_memExe_dMem_cache_m_banks_0_prefetcher_m_strideTable_rdReqQ_enqP_canon'
+  has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_deqP_canon'
+  has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_enqP_canon'
+  has no actions. Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqStQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqStQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqLrScAmoQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqLrScAmoQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqLdQ_deqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/RISCY_OOO/procs/lib/Ehr.bsv", line 61, column 8: (G0023)
+  The body of rule `coreFix_memExe_reqLdQ_enqP_canon' has no actions.
+  Removing...
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreReq_start" was treated as more urgent than
+  "readyToFetch". Conflicts:
+    "coreReq_start" cannot fire before "readyToFetch":
+      calls to fetchStage.start vs. fetchStage.done_flushing
+    "readyToFetch" cannot fire before "coreReq_start":
+      calls to fetchStage.done_flushing vs. fetchStage.start
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_doFetchTrainBP" was treated as more urgent than
+  "coreFix_doFetchTrainBP_1". Conflicts:
+    "coreFix_doFetchTrainBP" cannot fire before "coreFix_doFetchTrainBP_1":
+      calls to fetchStage.train_predictors vs. fetchStage.train_predictors
+    "coreFix_doFetchTrainBP_1" cannot fire before "coreFix_doFetchTrainBP":
+      calls to fetchStage.train_predictors vs. fetchStage.train_predictors
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_fpuMulDivExe_0_doFinishFpFma" was treated as more urgent than
+  "coreFix_fpuMulDivExe_0_doFinishFpDiv". Conflicts:
+    "coreFix_fpuMulDivExe_0_doFinishFpFma" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpDiv":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+    "coreFix_fpuMulDivExe_0_doFinishFpDiv" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpFma":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_fpuMulDivExe_0_doFinishFpDiv" was treated as more urgent than
+  "coreFix_fpuMulDivExe_0_doFinishFpSqrt". Conflicts:
+    "coreFix_fpuMulDivExe_0_doFinishFpDiv" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpSqrt":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+    "coreFix_fpuMulDivExe_0_doFinishFpSqrt" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpDiv":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_fpuMulDivExe_0_doFinishFpSqrt" was treated as more urgent than
+  "coreFix_fpuMulDivExe_0_doFinishIntMul". Conflicts:
+    "coreFix_fpuMulDivExe_0_doFinishFpSqrt" cannot fire before "coreFix_fpuMulDivExe_0_doFinishIntMul":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+    "coreFix_fpuMulDivExe_0_doFinishIntMul" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpSqrt":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_fpuMulDivExe_0_doFinishIntMul" was treated as more urgent than
+  "coreFix_fpuMulDivExe_0_doFinishIntDiv". Conflicts:
+    "coreFix_fpuMulDivExe_0_doFinishIntMul" cannot fire before "coreFix_fpuMulDivExe_0_doFinishIntDiv":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+    "coreFix_fpuMulDivExe_0_doFinishIntDiv" cannot fire before "coreFix_fpuMulDivExe_0_doFinishIntMul":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_aluExe_1_doFinishAlu_T" was treated as more urgent than
+  "coreFix_aluExe_0_doFinishAlu_T". Conflicts:
+    "coreFix_aluExe_1_doFinishAlu_T" cannot fire before "coreFix_aluExe_0_doFinishAlu_T":
+      calls to
+	fetchStage.redirect vs. fetchStage.redirect
+	rob.setExecuted_doFinishAlu_1_set vs. rob.setExecuted_doFinishAlu_0_set
+	sbCons.setReady_1_put vs. sbCons.setReady_0_put
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_lat_2.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_lat_2.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_0.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_0.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_1.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_1.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_lat_2.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_lat_2.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_0.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_0.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_1.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_1.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy2_2.read
+    "coreFix_aluExe_0_doFinishAlu_T" cannot fire before "coreFix_aluExe_1_doFinishAlu_T":
+      calls to
+	fetchStage.redirect vs. fetchStage.redirect
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_lat_2.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_lat_2.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_0.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_0.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_1.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy_2_1.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_lat_2.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_lat_2.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_0.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_0.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_1.wset vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy_2_1.wset
+	coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_specBits_dummy2_2.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_aluExe_0_doFinishAlu_T" was treated as more urgent than
+  "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP". Conflicts:
+    "coreFix_aluExe_0_doFinishAlu_T" cannot fire before "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+    "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP" cannot fire before "coreFix_aluExe_0_doFinishAlu_T":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_deqP_ehr_dummy2_0.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_deqP_ehr_dummy2_0.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreReq_start" was treated as more urgent than
+  "commitStage_doCommitTrap_flush". Conflicts:
+    "coreReq_start" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to fetchStage.start vs. fetchStage.setWaitRedirect
+    "commitStage_doCommitTrap_flush" cannot fire before "coreReq_start":
+      calls to fetchStage.setWaitRedirect vs. fetchStage.start
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP" was treated as
+  more urgent than "commitStage_doCommitTrap_flush". Conflicts:
+    "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_deqP_ehr_dummy2_0.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_deqP_ehr_dummy2_0.read
+    "commitStage_doCommitTrap_flush" cannot fire before "coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_Lr_deq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_doDeqLdQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Ld_Mem" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_Lr_deq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Ld_Mem" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_doDeqLdQ_Ld_Mem":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqLdQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Ld_Mem" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Ld_Mem" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqLdQ_Ld_Mem":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_MMIO_fault". Conflicts:
+    "coreFix_memExe_doDeqLdQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqLdQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Ld_Mem" was treated as more urgent than
+  "coreFix_memExe_doDeqLdQ_MMIO_fault". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Ld_Mem" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+    "coreFix_memExe_doDeqLdQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqLdQ_Ld_Mem":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_deq" was treated as more urgent than
+  "coreFix_memExe_doRespLdMem". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_doRespLdMem":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+    "coreFix_memExe_doRespLdMem" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+	coreFix_memExe_lsq.respLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.respLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_doRespLdMem". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_doRespLdMem":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+    "coreFix_memExe_doRespLdMem" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+	coreFix_memExe_lsq.respLd vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.respLd vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_deq" was treated as more urgent than
+  "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_deq" was treated as more urgent than
+  "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_fpuMulDivExe_0_doFinishIntDiv" was treated as more urgent than
+  "coreFix_fpuMulDivExe_0_doFinishFpSimple". Conflicts:
+    "coreFix_fpuMulDivExe_0_doFinishIntDiv" cannot fire before "coreFix_fpuMulDivExe_0_doFinishFpSimple":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+    "coreFix_fpuMulDivExe_0_doFinishFpSimple" cannot fire before "coreFix_fpuMulDivExe_0_doFinishIntDiv":
+      calls to
+	rf.write_2_wr vs. rf.write_2_wr
+	rob.setExecuted_doFinishFpuMulDiv_0_set vs. rob.setExecuted_doFinishFpuMulDiv_0_set
+	sbCons.setReady_2_put vs. sbCons.setReady_2_put
+	sbAggr.setReady_2_put vs. sbAggr.setReady_2_put
+	coreFix_aluExe_0_rsAlu.setRegReady_2_put vs. coreFix_aluExe_0_rsAlu.setRegReady_2_put
+	coreFix_aluExe_1_rsAlu.setRegReady_2_put vs. coreFix_aluExe_1_rsAlu.setRegReady_2_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_2_put
+	coreFix_memExe_rsMem.setRegReady_2_put vs. coreFix_memExe_rsMem.setRegReady_2_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "commitStage_doCommitTrap_flush" was treated as more urgent than
+  "coreFix_aluExe_1_doFinishAlu_F". Conflicts:
+    "commitStage_doCommitTrap_flush" cannot fire before "coreFix_aluExe_1_doFinishAlu_F":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+    "coreFix_aluExe_1_doFinishAlu_F" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to rob.setExecuted_doFinishAlu_1_set vs. rob.deqPort_0_deq_data
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "commitStage_doCommitTrap_flush" was treated as more urgent than
+  "coreFix_aluExe_0_doFinishAlu_F". Conflicts:
+    "commitStage_doCommitTrap_flush" cannot fire before "coreFix_aluExe_0_doFinishAlu_F":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+    "coreFix_aluExe_0_doFinishAlu_F" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to rob.setExecuted_doFinishAlu_0_set vs. rob.deqPort_0_deq_data
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "commitStage_doCommitTrap_flush" was treated as more urgent than
+  "renameStage_doRenaming_Trap". Conflicts:
+    "commitStage_doCommitTrap_flush" cannot fire before "renameStage_doRenaming_Trap":
+      calls to fetchStage.setWaitRedirect vs. fetchStage.setWaitRedirect
+    "renameStage_doRenaming_Trap" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to
+	fetchStage.setWaitRedirect vs. fetchStage.setWaitRedirect
+	rob.enqPort_0_enq vs. rob.deqPort_0_deq_data
+	rob.enqPort_0_enq vs. rob.deqPort_0_deq
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "commitStage_doCommitTrap_flush" was treated as more urgent than
+  "renameStage_doRenaming_SystemInst". Conflicts:
+    "commitStage_doCommitTrap_flush" cannot fire before "renameStage_doRenaming_SystemInst":
+      calls to fetchStage.setWaitRedirect vs. fetchStage.setWaitRedirect
+    "renameStage_doRenaming_SystemInst" cannot fire before "commitStage_doCommitTrap_flush":
+      calls to
+	fetchStage.setWaitRedirect vs. fetchStage.setWaitRedirect
+	rob.enqPort_0_enq vs. rob.deqPort_0_deq_data
+	rob.enqPort_0_enq vs. rob.deqPort_0_deq
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_aluExe_1_doFinishAlu_F" was treated as more urgent than
+  "commitStage_doCommitKilledLd". Conflicts:
+    "coreFix_aluExe_1_doFinishAlu_F" cannot fire before "commitStage_doCommitKilledLd":
+      calls to rob.setExecuted_doFinishAlu_1_set vs. rob.deqPort_0_deq_data
+    "commitStage_doCommitKilledLd" cannot fire before "coreFix_aluExe_1_doFinishAlu_F":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_aluExe_0_doFinishAlu_F" was treated as more urgent than
+  "commitStage_doCommitKilledLd". Conflicts:
+    "coreFix_aluExe_0_doFinishAlu_F" cannot fire before "commitStage_doCommitKilledLd":
+      calls to rob.setExecuted_doFinishAlu_0_set vs. rob.deqPort_0_deq_data
+    "commitStage_doCommitKilledLd" cannot fire before "coreFix_aluExe_0_doFinishAlu_F":
+      calls to
+	coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.write vs. coreFix_globalSpecUpdate_incorrectSpec_ff_valid_dummy2_2.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_fault". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_fault". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_fault". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_Fence". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_deq" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_Fence". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_Fence". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstLd
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqLd
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_issue" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_ScAmo_issue". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_issue" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+	coreFix_memExe_reqLrScAmoQ_data_0_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_data_0_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_enqP_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_enqP_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_empty_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_empty_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_full_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_full_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_full_dummy2_0.write vs. coreFix_memExe_reqLrScAmoQ_full_dummy2_0.read
+    "coreFix_memExe_doDeqStQ_ScAmo_issue" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+	coreFix_memExe_reqLrScAmoQ_data_0_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_data_0_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_enqP_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_enqP_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_empty_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_empty_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_full_lat_0.wset vs. coreFix_memExe_reqLrScAmoQ_full_lat_0.wset
+	coreFix_memExe_reqLrScAmoQ_full_dummy2_0.write vs. coreFix_memExe_reqLrScAmoQ_full_dummy2_0.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_issue" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_ScAmo_issue". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_issue" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+    "coreFix_memExe_doDeqStQ_ScAmo_issue" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doRespLdForward" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_ScAmo_deq". Conflicts:
+    "coreFix_memExe_doRespLdForward" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_doRespLdForward":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" was treated as
+  more urgent than "coreFix_memExe_doDeqStQ_ScAmo_deq". Conflicts:
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" was treated as
+  more urgent than "coreFix_memExe_doDeqStQ_ScAmo_deq". Conflicts:
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_ScAmo_deq". Conflicts:
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_Fence" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_ScAmo_deq". Conflicts:
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_Lr_issue" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_issue". Conflicts:
+    "coreFix_memExe_doDeqLdQ_Lr_issue" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+    "coreFix_memExe_doDeqStQ_MMIO_issue" cannot fire before "coreFix_memExe_doDeqLdQ_Lr_issue":
+      calls to
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqLdQ_MMIO_issue" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_issue". Conflicts:
+    "coreFix_memExe_doDeqLdQ_MMIO_issue" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_issue":
+      calls to
+	mmio_dataReqQ_enqReq_lat_0.wset vs. mmio_dataReqQ_enqReq_lat_0.wset
+	mmio_dataPendQ_enqReq_lat_0.wset vs. mmio_dataPendQ_enqReq_lat_0.wset
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+    "coreFix_memExe_doDeqStQ_MMIO_issue" cannot fire before "coreFix_memExe_doDeqLdQ_MMIO_issue":
+      calls to
+	mmio_dataReqQ_enqReq_lat_0.wset vs. mmio_dataReqQ_enqReq_lat_0.wset
+	mmio_dataPendQ_enqReq_lat_0.wset vs. mmio_dataPendQ_enqReq_lat_0.wset
+	coreFix_memExe_waitLrScAmoMMIOResp.write vs. coreFix_memExe_waitLrScAmoMMIOResp.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doRespLdForward" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_doRespLdForward" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_doRespLdForward":
+      calls to
+	rf.write_3_wr vs. rf.write_3_wr
+	sbCons.setReady_3_put vs. sbCons.setReady_3_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" was treated as
+  more urgent than "coreFix_memExe_doDeqStQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_cRq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" was treated as
+  more urgent than "coreFix_memExe_doDeqStQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_dMem_cache_m_banks_0_pipelineResp_pRs":
+      calls to
+	sbAggr.setReady_4_put vs. sbAggr.setReady_4_put
+	coreFix_aluExe_0_rsAlu.setRegReady_4_put vs. coreFix_aluExe_0_rsAlu.setRegReady_4_put
+	coreFix_aluExe_1_rsAlu.setRegReady_4_put vs. coreFix_aluExe_1_rsAlu.setRegReady_4_put
+	coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put vs. coreFix_fpuMulDivExe_0_rsFpuMulDiv.setRegReady_4_put
+	coreFix_memExe_rsMem.setRegReady_4_put vs. coreFix_memExe_rsMem.setRegReady_4_put
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_Fence" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_deq". Conflicts:
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_fault". Conflicts:
+    "coreFix_memExe_doDeqStQ_fault" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqStQ_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_Fence" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_MMIO_fault". Conflicts:
+    "coreFix_memExe_doDeqStQ_Fence" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_fault":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqStQ_Fence":
+      calls to
+	rob.setExecuted_deqLSQ vs. rob.setExecuted_deqLSQ
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_sendLrScAmoToMem" was treated as more urgent than
+  "coreFix_memExe_sendLdToMem". Conflicts:
+    "coreFix_memExe_sendLrScAmoToMem" cannot fire before "coreFix_memExe_sendLdToMem":
+      calls to
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_data_0_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_data_0_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_enqP_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_enqP_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_empty_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_empty_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_dummy2_0.write vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_dummy2_0.read
+    "coreFix_memExe_sendLdToMem" cannot fire before "coreFix_memExe_sendLrScAmoToMem":
+      calls to
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_data_0_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_data_0_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_enqP_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_enqP_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_empty_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_empty_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_lat_0.wset vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_lat_0.wset
+	coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_dummy2_0.write vs. coreFix_memExe_dMem_cache_m_banks_0_rqFromCQ_full_dummy2_0.read
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_ScAmo_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_St_Mem". Conflicts:
+    "coreFix_memExe_doDeqStQ_ScAmo_deq" cannot fire before "coreFix_memExe_doDeqStQ_St_Mem":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_St_Mem" cannot fire before "coreFix_memExe_doDeqStQ_ScAmo_deq":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_MMIO_deq" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_St_Mem". Conflicts:
+    "coreFix_memExe_doDeqStQ_MMIO_deq" cannot fire before "coreFix_memExe_doDeqStQ_St_Mem":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_St_Mem" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_deq":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_memExe_doDeqStQ_MMIO_fault" was treated as more urgent than
+  "coreFix_memExe_doDeqStQ_St_Mem". Conflicts:
+    "coreFix_memExe_doDeqStQ_MMIO_fault" cannot fire before "coreFix_memExe_doDeqStQ_St_Mem":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+    "coreFix_memExe_doDeqStQ_St_Mem" cannot fire before "coreFix_memExe_doDeqStQ_MMIO_fault":
+      calls to
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.firstSt
+	coreFix_memExe_lsq.deqSt vs. coreFix_memExe_lsq.deqSt
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0010)
+  Rule "coreFix_aluExe_0_doFinishAlu_T" was treated as more urgent than
+  "commitStage_pass_redirect". Conflicts:
+    "coreFix_aluExe_0_doFinishAlu_T" cannot fire before "commitStage_pass_redirect":
+      calls to fetchStage.redirect vs. fetchStage.redirect
+    "commitStage_pass_redirect" cannot fire before "coreFix_aluExe_0_doFinishAlu_T":
+      calls to fetchStage.redirect vs. fetchStage.redirect
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0036)
+  Rule "setSEIP" will appear to fire before "commitStage_doCommitSystemInst"
+  when both fire in the same clock cycle, affecting:
+    calls to
+      csrf_external_int_pend_vec_1.write vs. csrf_external_int_pend_vec_1.write
+Warning: "../../src_Core/RISCY_OOO/procs/lib/SpecFifo.bsv", line 242, column 10: (G0021)
+  According to the generated schedule, rule
+  `coreFix_globalSpecUpdate_incorrectSpec_ff_canon_deqP' can never fire.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `deadlock_dCacheCRqStuck_get' is
+  never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `deadlock_dCachePRqStuck_get' is
+  never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `deadlock_renameInstStuck_get'
+  is never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method
+  `deadlock_renameCorrectPathStuck_get' is never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `deadlock_commitInstStuck_get'
+  is never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method
+  `deadlock_commitUserInstStuck_get' is never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `deadlock_checkStarted_get' is
+  never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 224, column 8: (G0022)
+  According to the generated schedule, method `renameDebug_renameErr_get' is
+  never ready.
+Warning: "../../src_Core/CPU/Core.bsv", line 209, column 10: (T0127)
+  Exporting orphan typeclass instance
+  PerformanceMonitor::BitVectorable#(ProcTypes::EventsCore, 2,
+  TDiv#(SizeOf#(ProcTypes::EventsCore), SizeOf#(Bit#(2)))). The instance's
+  typeclass as well as all of the instance's source type parameters are
+  defined in other packages. This can lead to confusing and inconsistent
+  instance resolution if the orphan instance is not imported everywhere it
+  could be used.
+Warning: "../../src_Core/CPU/Core.bsv", line 213, column 10: (T0127)
+  Exporting orphan typeclass instance
+  PerformanceMonitor::BitVectorable#(ProcTypes::EventsCoreMem, 8,
+  TDiv#(SizeOf#(ProcTypes::EventsCoreMem), 8)). The instance's typeclass as
+  well as all of the instance's source type parameters are defined in other
+  packages. This can lead to confusing and inconsistent instance resolution if
+  the orphan instance is not imported everywhere it could be used.
+Warning: "../../src_Core/CPU/Core.bsv", line 217, column 10: (T0127)
+  Exporting orphan typeclass instance
+  PerformanceMonitor::BitVectorable#(CCTypes::EventsCache, 8,
+  TDiv#(SizeOf#(CCTypes::EventsCache), 8)). The instance's typeclass as well
+  as all of the instance's source type parameters are defined in other
+  packages. This can lead to confusing and inconsistent instance resolution if
+  the orphan instance is not imported everywhere it could be used.
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "mmio_axi4_adapter_rl_handle_read_rsps" was treated as more urgent than
+  "mmio_axi4_adapter_rl_handle_write_req". Conflicts:
+    "mmio_axi4_adapter_rl_handle_read_rsps" cannot fire before "mmio_axi4_adapter_rl_handle_write_req":
+      calls to
+	mmio_axi4_adapter_f_rsps_to_core.enq vs. mmio_axi4_adapter_f_rsps_to_core.enq
+    "mmio_axi4_adapter_rl_handle_write_req" cannot fire before "mmio_axi4_adapter_rl_handle_read_rsps":
+      calls to
+	mmio_axi4_adapter_f_rsps_to_core.enq vs. mmio_axi4_adapter_f_rsps_to_core.enq
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "mmio_axi4_adapter_rl_handle_read_rsps" was treated as more urgent than
+  "mmio_axi4_adapter_rl_handle_read_req". Conflicts:
+    "mmio_axi4_adapter_rl_handle_read_rsps" cannot fire before "mmio_axi4_adapter_rl_handle_read_req":
+      calls to
+	mmio_axi4_adapter_f_rsps_to_core.enq vs. mmio_axi4_adapter_f_rsps_to_core.enq
+    "mmio_axi4_adapter_rl_handle_read_req" cannot fire before "mmio_axi4_adapter_rl_handle_read_rsps":
+      calls to
+	mmio_axi4_adapter_f_rsps_to_core.enq vs. mmio_axi4_adapter_f_rsps_to_core.enq
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "llc_mem_server_rl_handle_MemLoader_st_req" was treated as more urgent
+  than "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged". Conflicts:
+    "llc_mem_server_rl_handle_MemLoader_st_req" cannot fire before "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged":
+      calls to
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+	llc_mem_server_rg_cacheline_cache_data.write vs. llc_mem_server_rg_cacheline_cache_data.read
+	llc_mem_server_rg_cacheline_cache_dirty_delay.write vs. llc_mem_server_rg_cacheline_cache_dirty_delay.read
+    "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged" cannot fire before "llc_mem_server_rl_handle_MemLoader_st_req":
+      calls to
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged" was treated as
+  more urgent than
+  "llc_mem_server_rl_cacheline_cache_writeback_st_miss". Conflicts:
+    "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged" cannot fire before "llc_mem_server_rl_cacheline_cache_writeback_st_miss":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+    "llc_mem_server_rl_cacheline_cache_writeback_st_miss" cannot fire before "llc_mem_server_rl_cacheline_cache_writeback_dirty_aged":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "llc_mem_server_rl_cacheline_cache_writeback_st_miss" was treated as
+  more urgent than
+  "llc_mem_server_rl_cacheline_cache_writeback_ld_miss". Conflicts:
+    "llc_mem_server_rl_cacheline_cache_writeback_st_miss" cannot fire before "llc_mem_server_rl_cacheline_cache_writeback_ld_miss":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+    "llc_mem_server_rl_cacheline_cache_writeback_ld_miss" cannot fire before "llc_mem_server_rl_cacheline_cache_writeback_st_miss":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "llc_mem_server_rl_handle_MemLoader_st_req" was treated as more urgent
+  than "llc_mem_server_rl_cacheline_cache_reload_req_ld". Conflicts:
+    "llc_mem_server_rl_handle_MemLoader_st_req" cannot fire before "llc_mem_server_rl_cacheline_cache_reload_req_ld":
+      calls to
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+    "llc_mem_server_rl_cacheline_cache_reload_req_ld" cannot fire before "llc_mem_server_rl_handle_MemLoader_st_req":
+      calls to
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+	llc_mem_server_rg_cacheline_cache_addr.write vs. llc_mem_server_rg_cacheline_cache_addr.read
+Warning: "../../src_Core/CPU/Proc.bsv", line 93, column 8: (G0010)
+  Rule "llc_mem_server_rl_cacheline_cache_reload_req_st" was treated as more
+  urgent than "llc_mem_server_rl_cacheline_cache_reload_req_ld". Conflicts:
+    "llc_mem_server_rl_cacheline_cache_reload_req_st" cannot fire before "llc_mem_server_rl_cacheline_cache_reload_req_ld":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+	llc_mem_server_rg_cacheline_cache_addr.write vs. llc_mem_server_rg_cacheline_cache_addr.read
+    "llc_mem_server_rl_cacheline_cache_reload_req_ld" cannot fire before "llc_mem_server_rl_cacheline_cache_reload_req_st":
+      calls to
+	llc.dma_memReq_enq vs. llc.dma_memReq_enq
+	llc_mem_server_rg_cacheline_cache_state.write vs. llc_mem_server_rg_cacheline_cache_state.read
+	llc_mem_server_rg_cacheline_cache_addr.write vs. llc_mem_server_rg_cacheline_cache_addr.read
+Warning: "../../src_Testbench/Fabrics/AXI4/AXI4_Fabric.bsv", line 221, column 15: (G0023)
+  The condition for rule `fabric_rl_wr_xaction_no_such_slave' is always false.
+  Removing...
+Warning: "../../src_Testbench/Fabrics/AXI4/AXI4_Fabric.bsv", line 221, column 15: (G0023)
+  The condition for rule `fabric_rl_wr_xaction_no_such_slave_1' is always
+  false. Removing...
+Warning: "../../src_Testbench/Fabrics/AXI4/AXI4_Fabric.bsv", line 339, column 15: (G0023)
+  The condition for rule `fabric_rl_rd_xaction_no_such_slave' is always false.
+  Removing...
+Warning: "../../src_Testbench/Fabrics/AXI4/AXI4_Fabric.bsv", line 339, column 15: (G0023)
+  The condition for rule `fabric_rl_rd_xaction_no_such_slave_1' is always
+  false. Removing...
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_wr_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave" cannot fire before "fabric_rl_wr_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+    "fabric_rl_wr_xaction_master_to_slave_3" cannot fire before "fabric_rl_wr_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_addr.enq vs. fabric_xactors_to_slaves_0_f_wr_addr.enq
+	fabric_v_f_wr_mis_0.enq vs. fabric_v_f_wr_mis_0.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+    "fabric_rl_wr_xaction_master_to_slave_4" cannot fire before "fabric_rl_wr_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_wr_addr.enq vs. fabric_xactors_to_slaves_1_f_wr_addr.enq
+	fabric_v_f_wr_mis_1.enq vs. fabric_v_f_wr_mis_1.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_2" cannot fire before "fabric_rl_wr_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+    "fabric_rl_wr_xaction_master_to_slave_5" cannot fire before "fabric_rl_wr_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_wr_addr.enq vs. fabric_xactors_to_slaves_2_f_wr_addr.enq
+	fabric_v_f_wr_mis_2.enq vs. fabric_v_f_wr_mis_2.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_wr_xaction_master_to_slave_data" was treated as more urgent
+  than "fabric_rl_wr_xaction_master_to_slave_data_1". Conflicts:
+    "fabric_rl_wr_xaction_master_to_slave_data" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data_1":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+    "fabric_rl_wr_xaction_master_to_slave_data_1" cannot fire before "fabric_rl_wr_xaction_master_to_slave_data":
+      calls to
+	fabric_xactors_to_slaves_0_f_wr_data.enq vs. fabric_xactors_to_slaves_0_f_wr_data.enq
+	fabric_xactors_to_slaves_1_f_wr_data.enq vs. fabric_xactors_to_slaves_1_f_wr_data.enq
+	fabric_xactors_to_slaves_2_f_wr_data.enq vs. fabric_xactors_to_slaves_2_f_wr_data.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave" was treated as more urgent than
+  "fabric_rl_rd_xaction_master_to_slave_3". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave" cannot fire before "fabric_rl_rd_xaction_master_to_slave_3":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+    "fabric_rl_rd_xaction_master_to_slave_3" cannot fire before "fabric_rl_rd_xaction_master_to_slave":
+      calls to
+	fabric_xactors_to_slaves_0_f_rd_addr.enq vs. fabric_xactors_to_slaves_0_f_rd_addr.enq
+	fabric_v_f_rd_mis_0.enq vs. fabric_v_f_rd_mis_0.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_1" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_4". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_1" cannot fire before "fabric_rl_rd_xaction_master_to_slave_4":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+    "fabric_rl_rd_xaction_master_to_slave_4" cannot fire before "fabric_rl_rd_xaction_master_to_slave_1":
+      calls to
+	fabric_xactors_to_slaves_1_f_rd_addr.enq vs. fabric_xactors_to_slaves_1_f_rd_addr.enq
+	fabric_v_f_rd_mis_1.enq vs. fabric_v_f_rd_mis_1.enq
+Warning: "../../src_Core/Core/CoreW.bsv", line 480, column 8: (G0010)
+  Rule "fabric_rl_rd_xaction_master_to_slave_2" was treated as more urgent
+  than "fabric_rl_rd_xaction_master_to_slave_5". Conflicts:
+    "fabric_rl_rd_xaction_master_to_slave_2" cannot fire before "fabric_rl_rd_xaction_master_to_slave_5":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+    "fabric_rl_rd_xaction_master_to_slave_5" cannot fire before "fabric_rl_rd_xaction_master_to_slave_2":
+      calls to
+	fabric_xactors_to_slaves_2_f_rd_addr.enq vs. fabric_xactors_to_slaves_2_f_rd_addr.enq
+	fabric_v_f_rd_mis_2.enq vs. fabric_v_f_rd_mis_2.enq
+Warning: Unknown position: (S0080)
+  33 warnings were suppressed.
+Using built-in specs.
+COLLECT_GCC=c++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /build/gcc/src/gcc/configure --enable-languages=ada,c,c++,d,fortran,go,lto,m2,objc,obj-c++,rust --enable-bootstrap --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://gitlab.archlinux.org/archlinux/packaging/packages/gcc/-/issues --with-build-config=bootstrap-lto --with-linker-hash-style=gnu --with-system-zlib --enable-__cxa_atexit --enable-cet=auto --enable-checking=release --enable-clocale=gnu --enable-default-pie --enable-default-ssp --enable-gnu-indirect-function --enable-gnu-unique-object --enable-libstdcxx-backtrace --enable-link-serialization=1 --enable-linker-build-id --enable-lto --enable-multilib --enable-plugin --enable-shared --enable-threads=posix --disable-libssp --disable-libstdcxx-pch --disable-werror
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 14.2.1 20240910 (GCC) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/:/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/:/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-O3' '-Wall' '-Wno-unused' '-D' '_FILE_OFFSET_BITS=64' '-v' '-shared' '-fPIC' '-o' 'exe_HW_sim.so' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'exe_HW_sim.so.'
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/collect2 -plugin /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccg4TGIE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -shared -o exe_HW_sim.so /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/crti.o /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/crtbeginS.o -L/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1 -L/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../.. -Bsymbolic --version-script=/opt/bluespec/lib/Bluesim/bs_elf_export_map.txt build_dir/mkTop_HW_Side.o build_dir/mkSoC_Top.o build_dir/mkSoC_Map.o build_dir/mkCoreW.o build_dir/mkProc.o build_dir/mkCore.o build_dir/mkFetchStage.o build_dir/mkBtb.o build_dir/mkDirPredictor.o build_dir/mkTourPred.o build_dir/mkTourGHistReg.o build_dir/mkRas.o build_dir/mkITlb.o build_dir/mkICoCache.o build_dir/mkIBankWrapper.o build_dir/mkICRqMshrWrapper.o build_dir/mkIPRqMshrWrapper.o build_dir/mkIPipeline.o build_dir/mkMMIOInst.o build_dir/module_decode.o build_dir/module_decodeBrPred.o build_dir/mkRFileSynth.o build_dir/mkPerfCountersToooba.o build_dir/mkRegRenamingTable.o build_dir/mkEpochManager.o build_dir/mkSpecTagManager.o build_dir/mkReorderBufferSynth.o build_dir/mkRobRowSynth.o build_dir/mkScoreboardCons.o build_dir/mkScoreboardAggr.o build_dir/mkReservationStationAlu.o build_dir/mkAluDispToRegFifo.o build_dir/mkAluRegToExeFifo.o build_dir/mkAluExeToFinFifo.o build_dir/mkReservationStationFpuMulDiv.o build_dir/mkFpuMulDivDispToRegFifo.o build_dir/mkFpuMulDivRegToExeFifo.o build_dir/mkMulExecQ.o build_dir/mkDivExecQ.o build_dir/mkSimpleRespQ.o build_dir/mkFmaExecQ.o build_dir/mkMinimumExecQ.o build_dir/mkDoubleFMA.o build_dir/mkDoubleDiv.o build_dir/mkDoubleSqrt.o build_dir/mkReservationStationMem.o build_dir/mkMemDispToRegFifo.o build_dir/mkMemRegToExeFifo.o build_dir/mkDTlbSynth.o build_dir/mkStoreBufferEhr.o build_dir/mkSplitLSQ.o build_dir/mkDCRqMshrWrapper.o build_dir/mkDPRqMshrWrapper.o build_dir/mkDPipeline.o build_dir/mkL2Tlb.o build_dir/mkSplitTransCache.o build_dir/module_basicExec.o build_dir/module_brAddrCalc.o build_dir/module_alu.o build_dir/module_aluBr.o build_dir/module_execFpuSimple.o build_dir/module_amoExec.o build_dir/module_checkForException.o build_dir/mkLLCache.o build_dir/mkLastLvCRqMshr.o build_dir/mkLLPipeline.o build_dir/mkFabric_2x3.o build_dir/mkPLIC_16_CoreNumX2_7.o build_dir/mkFabric_AXI4.o build_dir/mkBoot_ROM.o build_dir/mkAXI4_Deburster_A.o build_dir/mkMem_Controller.o build_dir/mkUART.o build_dir/mkMem_Model.o ../../src_Testbench/Top/C_Imported_Functions.o build_dir/model_mkTop_HW_Side.o /opt/bluespec/lib/Bluesim/libbskernel.a /opt/bluespec/lib/Bluesim/libbsprim.a -lstdc++ -lm -lgcc_s -lc -lgcc_s /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/crtendS.o /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../lib/crtn.o
+COLLECT_GCC_OPTIONS='-O3' '-Wall' '-Wno-unused' '-D' '_FILE_OFFSET_BITS=64' '-v' '-shared' '-fPIC' '-o' 'exe_HW_sim.so' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'exe_HW_sim.so.'

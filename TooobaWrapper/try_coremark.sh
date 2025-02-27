@@ -2,9 +2,12 @@
 # Configure which predictor used. ProcConfig.bsv. try putting it in a less central file for faster make
 # Recompile when config changed or predictor source changed
 
+set -e
 
 cd TooobaWrapper
 
+# Filter known warnings from stderr and ignore stdout.
+./filter_known_warnings.py -b baseline_make_err.txt -- \
 make -C Toooba/builds/RV64ACDFIMSU_Toooba_bluesim -j$(nproc) compile simulator > /dev/null
 
 ln -fs coremark_gcc.hex Mem.hex
