@@ -3,14 +3,15 @@ import Types::*;
 import ProcTypes::*;
 `endif
 import BrPred::*;
-
+import Ehr::*;
 
 import Vector::*;
 import RegFile::*;
 import Assert::*;
 
-export DirPredTrainInfo(..);
-export GSelectTrainInfo(..);
+// export DirPredTrainInfo(..);
+// export GSelectTrainInfo(..);
+export GSelectDirPredToken;
 export mkGSelect;
 
 export Result;
@@ -22,6 +23,7 @@ export NumGlobalHistoryItems;
 export GlobalHistory;
 export NumIndexBits;
 export Index;
+//export PredictionToken;
 
 // This branch predictor uses bits from the PC concatenated with global history to index a table of saturation counters.
 // Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
@@ -53,6 +55,11 @@ typedef Vector#(NumGlobalHistoryItems, Result) GlobalHistory;
 typedef TAdd#(NumPcBits, TMul#(NumGlobalHistoryItems, SizeOf#(Result))) NumIndexBits;
 typedef Bit#(NumIndexBits) Index;
 
+typedef UInt#(8) GSelectDirPredToken;
+typedef TExp#(SizeOf#(GSelectDirPredToken)) NumPastPreds;
+typedef GSelectDirPredToken DirPredToken;
+typedef GSelectDirPredToken PredictionToken;
+
 typedef struct {
     Index index;
     ValueWithHysteresis vwh;
@@ -60,8 +67,14 @@ typedef struct {
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 typedef GSelectTrainInfo DirPredTrainInfo;
 
+typedef struct {
+    PredictionToken token;
+    Maybe#(Result) actual;
+    Bool mispred;
+} UpdateInfo deriving(Bits);
 
-module mkGSelect(DirPredictor#(GSelectTrainInfo));
+
+module mkGSelect(DirPredictor#(GSelectDirPredToken));
     staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
@@ -71,9 +84,23 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    RegFile#(Index, ValueWithHysteresis) predictionTable <- mkRegFileWCF(0, maxBound);
+    Vector#(TExp#(NumIndexBits), Reg#(ValueWithHysteresis)) predictionTable <- replicateM(mkRegU);
+    Vector#(TAdd#(SupSize, 1), RWire#(Tuple2#(Index, ValueWithHysteresis))) predictionTableWriters <- replicateM(mkRWire);
     // Registers to store the global history for this superscalar batch.
-    Vector#(SupSize, RWire#(Bool)) batchHistory <- replicateM(mkUnsafeRWire);
+    Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
+    Ehr#(SupSize, PredictionToken) currentPredictionToken <- mkEhr(0);
+    Vector#(NumPastPreds, Reg#(Maybe#(GSelectTrainInfo))) trainInfos <- replicateM(mkReg(Invalid));
+    Vector#(TAdd#(TMul#(SupSize, 2), 1), RWire#(Tuple2#(PredictionToken, Maybe#(GSelectTrainInfo)))) trainInfosWriters <- replicateM(mkRWire);
+    PulseWire process_mispred <- mkPulseWireOR();
+    // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
+    Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
+
+
+    function ActionValue#(PredictionToken) generatePredictionToken(Integer sup) = actionvalue
+        let token = currentPredictionToken[sup];
+        currentPredictionToken[sup] <= token + 1;
+        return token;
+    endactionvalue;
 
     function GlobalHistory addGlobalHistory(GlobalHistory gh, Result new_item);
         return shiftOutFromN(new_item, gh, 1);
@@ -114,42 +141,109 @@ module mkGSelect(DirPredictor#(GSelectTrainInfo));
         let gh <- globalHistoryWithBatchHistoryUpTo(valueOf(SupSize)); globalHistory <= gh;
     endrule
 
+    for (Integer i = 0; i < valueOf(SupSize) + 1; i = i + 1)
+    (* fire_when_enabled *)
+    rule doUpdate;
+        if (updateInfos[i].wget() matches tagged Valid .updateInfo) begin
+            let token = updateInfo.token;
+            let maybeActual = updateInfo.actual;
+            let mispred = updateInfo.mispred;
+            // Sometimes this method may do nothing (no prediction was made with this token).
+            Maybe#(GSelectTrainInfo) maybeTrainInfo = readReg(trainInfos[token]);
+            if (maybeTrainInfo matches tagged Valid .trainInfo) begin
+                // Deal with old predictions by assuming we are correct.
+                Result actual = fromMaybe(trainInfo.vwh.value, maybeActual);
+
+                // Update value with hysteresis and signal to store it.
+                let newVwh = updateValueWithHysteresis(trainInfo.vwh, actual);
+                predictionTableWriters[i].wset(tuple2(trainInfo.index, newVwh));
+
+                // Signal deletion of this training info.
+                trainInfosWriters[valueOf(SupSize)+i].wset(tuple2(token, Invalid));
+
+                if (mispred) begin
+                    // Rollback global history to before this prediction then add the correct result. 
+                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, actual);
+                    // Remove all other training information since the predictions should not have been made.
+                    process_mispred.send();
+                end
+            end
+        end
+    endrule
+
+    for (Index i = 0; i < maxBound; i = i + 1)
+        (* fire_when_enabled *)
+        rule writePredictionTable;
+            Bool done = False;
+            for (Integer w = 0; w < valueOf(SupSize) + 1 && !done; w = w + 1)
+                if (predictionTableWriters[w].wget() matches tagged Valid {.writeIndex, .vwh})
+                    // I don't think I can pattern match an Index.
+                    if (writeIndex == i) begin
+                        done = True;
+                        writeReg(predictionTable[i], vwh);
+                    end
+        endrule
+
+    for (PredictionToken i = 0; i < maxBound; i = i + 1)
+        (* fire_when_enabled *)
+        rule writeTrainInfo;
+            Bool done = False;
+            for (Integer w = 0; w < 2*valueOf(SupSize)+1 && !done; w = w + 1)
+                if (trainInfosWriters[w].wget() matches tagged Valid {.writePredictionToken, .trainInfo})
+                    // I don't think I can pattern match an Index.
+                    if (writePredictionToken == i) begin
+                        done = True;
+                        writeReg(trainInfos[i], trainInfo);
+                    end
+        endrule
+
+    (* fire_when_enabled *)
+    rule removeTrainInfos(process_mispred);
+        writeVReg(trainInfos, replicate(Invalid));
+    endrule
+
+
     // Vector to interfaces since Toooba is superscalar.
     // interface Vector#(SupSize, DirPred#(trainInfoT)) pred;
-    function DirPred#(GSelectTrainInfo) superscalarPred(Integer i);
-        return (interface DirPred#(GSelectTrainInfo);
-            method ActionValue#(DirPredResult#(GSelectTrainInfo)) pred;
+    function DirPred#(GSelectDirPredToken) superscalarPred(Integer sup);
+        return (interface DirPred#(GSelectDirPredToken);
+            method ActionValue#(DirPredResult#(GSelectDirPredToken)) pred;
                 // Get the true PC (minus lower 2 bits and upper bits) for this instruction.
-                let pcChopped = pcChoppedBase + fromInteger(i);
+                let pcChopped = pcChoppedBase + fromInteger(sup);
+
                 // Account for previous instructions in superscalar batch.
-                GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(i);
+                GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
 
-                ValueWithHysteresis vwh = predictionTable.sub(index);
+                ValueWithHysteresis vwh = readReg(predictionTable[index]);
 
                 // Record that a prediction was made with the result.
-                batchHistory[fromInteger(i)].wset(vwh.value);
+                batchHistory[sup].wset(vwh.value);
+
+                PredictionToken predictionToken <- generatePredictionToken(sup);
+                $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
+                DirPredTrainInfo trainInfo = DirPredTrainInfo {
+                    index: index,
+                    vwh: vwh,
+                    globalHistory: thisGlobalHistory
+                };
+                trainInfosWriters[sup].wset(tuple2(predictionToken, Valid(trainInfo)));
+                // Assume we were correct for a possible prediction this entry replaces.
+                updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid, mispred: False});
+
                 return DirPredResult {
                     taken: vwh.value,
-                    train: GSelectTrainInfo {
-                        index: index,
-                        vwh: vwh,
-                        globalHistory: thisGlobalHistory
-                    }
+                    token: predictionToken
                 };
             endmethod
         endinterface);
     endfunction
     interface pred = genWith(superscalarPred);
 
-    method Action update(Bool taken, GSelectTrainInfo train, Bool mispred);
-        predictionTable.upd(
-            train.index,
-            updateValueWithHysteresis(train.vwh, taken)
+    method Action update(PredictionToken token, Result actual, Bool mispred);
+        updateInfos[valueOf(SupSize)].wset(
+            UpdateInfo {token: token, actual: Valid(actual), mispred: mispred}
         );
-        if (mispred)
-            // Rollback global history to before this prediction then add the correct result. 
-            globalHistory <= addGlobalHistory(train.globalHistory, taken);
     endmethod
 
     method Action nextPc(Addr pc);
