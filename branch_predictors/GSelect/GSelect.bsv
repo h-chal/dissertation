@@ -9,21 +9,9 @@ import Vector::*;
 import RegFile::*;
 import Assert::*;
 
-// export DirPredTrainInfo(..);
-// export GSelectTrainInfo(..);
 export GSelectDirPredToken;
 export mkGSelect;
 
-export Result;
-export NumCounterBits;
-export ValueWithHysteresis;
-export NumPcBits;
-export ChoppedAddr;
-export NumGlobalHistoryItems;
-export GlobalHistory;
-export NumIndexBits;
-export Index;
-//export PredictionToken;
 
 // This branch predictor uses bits from the PC concatenated with global history to index a table of saturation counters.
 // Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
@@ -57,18 +45,15 @@ typedef Bit#(NumIndexBits) Index;
 
 typedef UInt#(8) GSelectDirPredToken;
 typedef TExp#(SizeOf#(GSelectDirPredToken)) NumPastPreds;
-typedef GSelectDirPredToken DirPredToken;
-typedef GSelectDirPredToken PredictionToken;
 
 typedef struct {
     Index index;
     ValueWithHysteresis vwh;
     GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
-typedef GSelectTrainInfo DirPredTrainInfo;
 
 typedef struct {
-    PredictionToken token;
+    GSelectDirPredToken token;
     Maybe#(Result) actual;
     Bool mispred;
 } UpdateInfo deriving(Bits);
@@ -88,15 +73,15 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     Vector#(TAdd#(SupSize, 1), RWire#(Tuple2#(Index, ValueWithHysteresis))) predictionTableWriters <- replicateM(mkRWire);
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
-    Ehr#(SupSize, PredictionToken) currentPredictionToken <- mkEhr(0);
+    Ehr#(SupSize, GSelectDirPredToken) currentPredictionToken <- mkEhr(0);
     Vector#(NumPastPreds, Reg#(Maybe#(GSelectTrainInfo))) trainInfos <- replicateM(mkReg(Invalid));
-    Vector#(TAdd#(TMul#(SupSize, 2), 1), RWire#(Tuple2#(PredictionToken, Maybe#(GSelectTrainInfo)))) trainInfosWriters <- replicateM(mkRWire);
+    Vector#(TAdd#(TMul#(SupSize, 2), 1), RWire#(Tuple2#(GSelectDirPredToken, Maybe#(GSelectTrainInfo)))) trainInfosWriters <- replicateM(mkRWire);
     PulseWire process_mispred <- mkPulseWireOR();
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
 
 
-    function ActionValue#(PredictionToken) generatePredictionToken(Integer sup) = actionvalue
+    function ActionValue#(GSelectDirPredToken) generatePredictionToken(Integer sup) = actionvalue
         let token = currentPredictionToken[sup];
         currentPredictionToken[sup] <= token + 1;
         return token;
@@ -184,7 +169,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                     end
         endrule
 
-    for (PredictionToken i = 0; i < maxBound; i = i + 1)
+    for (GSelectDirPredToken i = 0; i < maxBound; i = i + 1)
         (* fire_when_enabled *)
         rule writeTrainInfo;
             Bool done = False;
@@ -220,9 +205,9 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(vwh.value);
 
-                PredictionToken predictionToken <- generatePredictionToken(sup);
+                GSelectDirPredToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
-                DirPredTrainInfo trainInfo = DirPredTrainInfo {
+                GSelectTrainInfo trainInfo = GSelectTrainInfo {
                     index: index,
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
@@ -240,7 +225,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     endfunction
     interface pred = genWith(superscalarPred);
 
-    method Action update(PredictionToken token, Result actual, Bool mispred);
+    method Action update(GSelectDirPredToken token, Result actual, Bool mispred);
         updateInfos[valueOf(SupSize)].wset(
             UpdateInfo {token: token, actual: Valid(actual), mispred: mispred}
         );
