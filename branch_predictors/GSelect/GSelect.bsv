@@ -54,8 +54,7 @@ typedef struct {
 
 typedef struct {
     GSelectDirPredToken token;
-    Maybe#(Result) actual;
-    Bool mispred;
+    Maybe#(Result) actual;  // Valid if explicit update, Invalid if implicit update.
 } UpdateInfo deriving(Bits);
 
 
@@ -132,12 +131,20 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
         if (updateInfos[i].wget() matches tagged Valid .updateInfo) begin
             let token = updateInfo.token;
             let maybeActual = updateInfo.actual;
-            let mispred = updateInfo.mispred;
             // Sometimes this method may do nothing (no prediction was made with this token).
             Maybe#(GSelectTrainInfo) maybeTrainInfo = readReg(trainInfos[token]);
             if (maybeTrainInfo matches tagged Valid .trainInfo) begin
-                // Deal with old predictions by assuming we are correct.
-                Result actual = fromMaybe(trainInfo.vwh.value, maybeActual);
+                // mispred used to be given explicitly, this is a way to get it again.
+                Bool mispred;
+                Result actual;
+                if (maybeActual matches tagged Valid .actual_) begin
+                    mispred = (actual_ != trainInfo.vwh.value);
+                    actual = actual_;
+                end else begin
+                    mispred = False;
+                    // Deal with implicit updates (old predictions) by assuming we are correct.
+                    actual = trainInfo.vwh.value;
+                end
 
                 // Update value with hysteresis and signal to store it.
                 let newVwh = updateValueWithHysteresis(trainInfo.vwh, actual);
@@ -214,7 +221,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 };
                 trainInfosWriters[sup].wset(tuple2(predictionToken, Valid(trainInfo)));
                 // Assume we were correct for a possible prediction this entry replaces.
-                updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid, mispred: False});
+                updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
                 return DirPredResult {
                     taken: vwh.value,
@@ -225,9 +232,9 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     endfunction
     interface pred = genWith(superscalarPred);
 
-    method Action update(GSelectDirPredToken token, Result actual, Bool mispred);
+    method Action update(GSelectDirPredToken token, Result actual);
         updateInfos[valueOf(SupSize)].wset(
-            UpdateInfo {token: token, actual: Valid(actual), mispred: mispred}
+            UpdateInfo {token: token, actual: Valid(actual)}
         );
     endmethod
 
