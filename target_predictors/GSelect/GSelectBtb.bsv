@@ -10,16 +10,39 @@ import RegFile::*;
 import Assert::*;
 import TRegFile::*;
 
-export GSelectDirPredToken;
-export mkGSelect;
+export GSelectBtbToken;
+export mkGSelectBtb;
+
+export NextAddrPred(..);
+export BtbResult(..);
+export BtbPred(..);
+
+interface BtbPred#(type btbTokenT);
+    method ActionValue#(BtbResult#(btbTokenT)) pred;
+endinterface
+
+interface NextAddrPred#(type btbTokenT);
+    //method Action put_pc(Addr pc);
+    method Action nextPc(Addr pc);
+    interface Vector#(SupSizeX2, BtbPred#(btbTokenT)) pred;
+    method Action update(btbTokenT token, Maybe#(Addr) brTarget);
+    // security
+    method Action flush;
+    method Bool flush_done;
+endinterface
+
+typedef struct {
+    Maybe#(Addr) maybeAddr;
+    btbTokenT token; // info for future training
+} BtbResult#(type btbTokenT) deriving(Bits, Eq, FShow);
 
 
-// This branch predictor uses bits from the PC concatenated with global history to index a table of saturation counters.
+// This BTB uses bits from the PC concatenated with global history to index a table of saturation counters.
 // Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
 // The predictor size is NumCounterBits * 2^(NumPcBits+(NumGlobalHistoryItems*SizeOf(Result)).
 
-// A Boolean value for whether a branch should be (or was) taken.
-typedef Bool Result;
+// Valid(target) for a branch/jump to target, or Invalid for continuing to PC+2.
+typedef Maybe#(Addr) Result;
 
 // The number of hysteresis bits in each saturating counter.
 // 1 <= NumCounterBits.
@@ -44,22 +67,25 @@ typedef Vector#(NumGlobalHistoryItems, Result) GlobalHistory;
 typedef TAdd#(NumPcBits, TMul#(NumGlobalHistoryItems, SizeOf#(Result))) NumIndexBits;
 typedef Bit#(NumIndexBits) Index;
 
-typedef UInt#(8) GSelectDirPredToken;
-typedef TExp#(SizeOf#(GSelectDirPredToken)) NumPastPreds;
+typedef Bit#(12) HashedIndex;
+// This is a major difference between dirpred and btb
+
+typedef UInt#(8) GSelectBtbToken;
+typedef TExp#(SizeOf#(GSelectBtbToken)) NumPastPreds;
 
 typedef struct {
-    Index index;
+    HashedIndex index;
     ValueWithHysteresis vwh;
     GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 
 typedef struct {
-    GSelectDirPredToken token;
+    GSelectBtbToken token;
     Maybe#(Result) actual; // Valid if explicit update, Invalid if implicit update.
 } UpdateInfo deriving(Bits);
 
 
-module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
+module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
@@ -69,20 +95,20 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    TRegFile#(Index, ValueWithHysteresis, TAdd#(SupSize, 1)) predictionTable <- mkTRegFile(
-        replicate(ValueWithHysteresis {value: False, hysteresis: 0})
+    TRegFile#(HashedIndex, ValueWithHysteresis, TAdd#(SupSizeX2, 1)) predictionTable <- mkTRegFile(
+        replicate(ValueWithHysteresis {value: Invalid, hysteresis: 0})
     );
     // Registers to store the global history for this superscalar batch.
-    Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
-    Ehr#(SupSize, GSelectDirPredToken) currentPredictionToken <- mkEhr(0);
-    TRegFile#(GSelectDirPredToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSize, 2), 1)) trainInfos <- mkTRegFile(
+    Vector#(SupSizeX2, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
+    Ehr#(SupSizeX2, GSelectBtbToken) currentPredictionToken <- mkEhr(0);
+    TRegFile#(GSelectBtbToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSizeX2, 2), 1)) trainInfos <- mkTRegFile(
         replicate(Invalid)
     );
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
-    Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
+    Vector#(TAdd#(SupSizeX2, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
 
 
-    function ActionValue#(GSelectDirPredToken) generatePredictionToken(Integer sup) = actionvalue
+    function ActionValue#(GSelectBtbToken) generatePredictionToken(Integer sup) = actionvalue
         let token = currentPredictionToken[sup];
         currentPredictionToken[sup] <= token + 1;
         return token;
@@ -94,7 +120,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     
     // Get the global history with relevant predictions for previous instructions in this cycle's batch, excluding i.
     function ActionValue#(GlobalHistory) globalHistoryWithBatchHistoryUpTo(Integer i) = actionvalue
-        dynamicAssert(i <= valueOf(SupSize), "i must be <= SupSize");
+        dynamicAssert(i <= valueOf(SupSizeX2), "i must be <= SupSizeX2");
         GlobalHistory globalHistoryWithBatchHistory = globalHistory;
         for (Integer j = 0; j < i; j = j+1)
             if (batchHistory[j].wget() matches tagged Valid .result)
@@ -124,10 +150,10 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
 
     rule updateGlobalHistory;
         // Reading all of `batchHistory` causes this rule to be scheduled after all predictions.
-        let gh <- globalHistoryWithBatchHistoryUpTo(valueOf(SupSize)); globalHistory <= gh;
+        let gh <- globalHistoryWithBatchHistoryUpTo(valueOf(SupSizeX2)); globalHistory <= gh;
     endrule
 
-    for (Integer i = 0; i < valueOf(SupSize) + 1; i = i + 1)
+    for (Integer i = 0; i < valueOf(SupSizeX2) + 1; i = i + 1)
     (* fire_when_enabled *)
     rule doUpdate;
         if (updateInfos[i].wget() matches tagged Valid .updateInfo) begin
@@ -153,7 +179,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 predictionTable.write[i] <= tuple2(trainInfo.index, newVwh);
 
                 // Signal deletion of this training info.
-                trainInfos.write[valueOf(SupSize)+i] <= tuple2(token, Invalid);
+                trainInfos.write[valueOf(SupSizeX2)+i] <= tuple2(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
@@ -166,10 +192,10 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     endrule
 
     // Vector to interfaces since Toooba is superscalar.
-    // interface Vector#(SupSize, DirPred#(trainInfoT)) pred;
-    function DirPred#(GSelectDirPredToken) superscalarPred(Integer sup);
-        return (interface DirPred#(GSelectDirPredToken);
-            method ActionValue#(DirPredResult#(GSelectDirPredToken)) pred;
+    // interface Vector#(SupSizeX2, BtbPred#(trainInfoT)) pred;
+    function BtbPred#(GSelectBtbToken) superscalarPred(Integer sup);
+        return (interface BtbPred#(GSelectBtbToken);
+            method ActionValue#(BtbResult#(GSelectBtbToken)) pred;
                 // Get the true PC (minus lower 2 bits and upper bits) for this instruction.
                 let pcChopped = pcChoppedBase + fromInteger(sup);
 
@@ -177,15 +203,16 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
 
-                ValueWithHysteresis vwh = predictionTable.read[index];
+                HashedIndex hIndex = hash(index);
+                ValueWithHysteresis vwh = predictionTable.read[hIndex];
 
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(vwh.value);
 
-                GSelectDirPredToken predictionToken <- generatePredictionToken(sup);
+                GSelectBtbToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
                 GSelectTrainInfo trainInfo = GSelectTrainInfo {
-                    index: index,
+                    index: hash(index),
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
                 };
@@ -193,8 +220,8 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
-                return DirPredResult {
-                    taken: vwh.value,
+                return BtbResult {
+                    maybeAddr: vwh.value,
                     token: predictionToken
                 };
             endmethod
@@ -202,8 +229,8 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     endfunction
     interface pred = genWith(superscalarPred);
 
-    method Action update(GSelectDirPredToken token, Result actual);
-        updateInfos[valueOf(SupSize)].wset(
+    method Action update(GSelectBtbToken token, Result actual);
+        updateInfos[valueOf(SupSizeX2)].wset(
             UpdateInfo {token: token, actual: Valid(actual)}
         );
     endmethod
