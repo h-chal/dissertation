@@ -8,6 +8,7 @@ import Ehr::*;
 import Vector::*;
 import RegFile::*;
 import Assert::*;
+import TRegFile::*;
 
 export GSelectDirPredToken;
 export mkGSelect;
@@ -58,7 +59,7 @@ typedef struct {
 } UpdateInfo deriving(Bits);
 
 
-module mkGSelect(DirPredictor#(GSelectDirPredToken));
+module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
@@ -68,14 +69,15 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    Vector#(TExp#(NumIndexBits), Reg#(ValueWithHysteresis)) predictionTable <- replicateM(mkRegU);
-    Vector#(TAdd#(SupSize, 1), RWire#(Tuple2#(Index, ValueWithHysteresis))) predictionTableWriters <- replicateM(mkRWire);
+    TRegFile#(Index, ValueWithHysteresis, TAdd#(SupSize, 1)) predictionTable <- mkTRegFile(
+        replicate(ValueWithHysteresis {value: False, hysteresis: 0})
+    );
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
     Ehr#(SupSize, GSelectDirPredToken) currentPredictionToken <- mkEhr(0);
-    Vector#(NumPastPreds, Reg#(Maybe#(GSelectTrainInfo))) trainInfos <- replicateM(mkReg(Invalid));
-    Vector#(TAdd#(TMul#(SupSize, 2), 1), RWire#(Tuple2#(GSelectDirPredToken, Maybe#(GSelectTrainInfo)))) trainInfosWriters <- replicateM(mkRWire);
-    PulseWire process_mispred <- mkPulseWireOR();
+    TRegFile#(GSelectDirPredToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSize, 2), 1)) trainInfos <- mkTRegFile(
+        replicate(Invalid)
+    );
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
 
@@ -132,7 +134,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
             let token = updateInfo.token;
             let maybeActual = updateInfo.actual;
             // Sometimes this method may do nothing (no prediction was made with this token).
-            Maybe#(GSelectTrainInfo) maybeTrainInfo = readReg(trainInfos[token]);
+            Maybe#(GSelectTrainInfo) maybeTrainInfo = trainInfos.read[token];
             if (maybeTrainInfo matches tagged Valid .trainInfo) begin
                 // mispred used to be given explicitly, this is a way to get it again.
                 Bool mispred;
@@ -148,52 +150,20 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
 
                 // Update value with hysteresis and signal to store it.
                 let newVwh = updateValueWithHysteresis(trainInfo.vwh, actual);
-                predictionTableWriters[i].wset(tuple2(trainInfo.index, newVwh));
+                predictionTable.write[i] <= tuple2(trainInfo.index, newVwh);
 
                 // Signal deletion of this training info.
-                trainInfosWriters[valueOf(SupSize)+i].wset(tuple2(token, Invalid));
+                trainInfos.write[valueOf(SupSize)+i] <= tuple2(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
                     globalHistory <= addGlobalHistory(trainInfo.globalHistory, actual);
                     // Remove all other training information since the predictions should not have been made.
-                    process_mispred.send();
+                    trainInfos.clear;
                 end
             end
         end
     endrule
-
-    for (Index i = 0; i < maxBound; i = i + 1)
-        (* fire_when_enabled *)
-        rule writePredictionTable;
-            Bool done = False;
-            for (Integer w = 0; w < valueOf(SupSize) + 1 && !done; w = w + 1)
-                if (predictionTableWriters[w].wget() matches tagged Valid {.writeIndex, .vwh})
-                    // I don't think I can pattern match an Index.
-                    if (writeIndex == i) begin
-                        done = True;
-                        writeReg(predictionTable[i], vwh);
-                    end
-        endrule
-
-    for (GSelectDirPredToken i = 0; i < maxBound; i = i + 1)
-        (* fire_when_enabled *)
-        rule writeTrainInfo;
-            Bool done = False;
-            for (Integer w = 0; w < 2*valueOf(SupSize)+1 && !done; w = w + 1)
-                if (trainInfosWriters[w].wget() matches tagged Valid {.writePredictionToken, .trainInfo})
-                    // I don't think I can pattern match an Index.
-                    if (writePredictionToken == i) begin
-                        done = True;
-                        writeReg(trainInfos[i], trainInfo);
-                    end
-        endrule
-
-    (* fire_when_enabled *)
-    rule removeTrainInfos(process_mispred);
-        writeVReg(trainInfos, replicate(Invalid));
-    endrule
-
 
     // Vector to interfaces since Toooba is superscalar.
     // interface Vector#(SupSize, DirPred#(trainInfoT)) pred;
@@ -207,7 +177,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
 
-                ValueWithHysteresis vwh = readReg(predictionTable[index]);
+                ValueWithHysteresis vwh = predictionTable.read[index];
 
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(vwh.value);
@@ -219,7 +189,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
                 };
-                trainInfosWriters[sup].wset(tuple2(predictionToken, Valid(trainInfo)));
+                trainInfos.write[sup] <= tuple2(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
