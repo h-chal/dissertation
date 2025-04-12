@@ -91,7 +91,7 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
 
 
-    // The lower `NumPcBits` bits (minus 2 lowest) of the PC for first instruction in the superscalar batch.
+    // The lower `NumPcBits` bits (minus lowest) of the PC for first instruction in the superscalar batch.
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
@@ -196,7 +196,7 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     function BtbPred#(GSelectBtbToken) superscalarPred(Integer sup);
         return (interface BtbPred#(GSelectBtbToken);
             method ActionValue#(BtbResult#(GSelectBtbToken)) pred;
-                // Get the true PC (minus lower 2 bits and upper bits) for this instruction.
+                // Get the true PC (minus 1 lower bit and upper bits) for this instruction.
                 let pcChopped = pcChoppedBase + fromInteger(sup);
 
                 // Account for previous instructions in superscalar batch.
@@ -236,9 +236,9 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     endmethod
 
     method Action nextPc(Addr pc);
-        // Remove the lower 2 bits because instructions are word aligned.
+        // Remove a lower bit because instruction fragments are half-word aligned.
         // Then remove MSBs to fit into NumPcBits.
-        pcChoppedBase <= truncate(pc >> 2);
+        pcChoppedBase <= truncate(pc >> 1);
     endmethod
 
     method flush = noAction;
