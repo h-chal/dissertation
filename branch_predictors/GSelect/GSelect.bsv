@@ -149,7 +149,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 end
 
                 // Update value with hysteresis and signal to store it.
-                let newVwh = updateValueWithHysteresis(trainInfo.vwh, actual);
+                let newVwh = updateValueWithHysteresis(predictionTable.read[trainInfo.index], actual);
                 predictionTable.write[i] <= tuple2(trainInfo.index, newVwh);
 
                 // Signal deletion of this training info.
