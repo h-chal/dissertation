@@ -62,19 +62,16 @@ typedef Bit#(NumPcBits) ChoppedAddr;
 // 1 <= NumGlobalHistoryItems.
 typedef 8 NumGlobalHistoryItems;
 // The first item is the newest.
-typedef Vector#(NumGlobalHistoryItems, Result) GlobalHistory;
+typedef Vector#(NumGlobalHistoryItems, Bool) GlobalHistory;
 
-typedef TAdd#(NumPcBits, TMul#(NumGlobalHistoryItems, SizeOf#(Result))) NumIndexBits;
+typedef TAdd#(NumPcBits, NumGlobalHistoryItems) NumIndexBits;
 typedef Bit#(NumIndexBits) Index;
-
-typedef Bit#(12) HashedIndex;
-// This is a major difference between dirpred and btb
 
 typedef UInt#(8) GSelectBtbToken;
 typedef TExp#(SizeOf#(GSelectBtbToken)) NumPastPreds;
 
 typedef struct {
-    HashedIndex index;
+    Index index;
     ValueWithHysteresis vwh;
     GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
@@ -95,11 +92,11 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    TRegFile#(HashedIndex, ValueWithHysteresis, TAdd#(SupSizeX2, 1)) predictionTable <- mkTRegFile(
+    TRegFile#(Index, ValueWithHysteresis, TAdd#(SupSizeX2, 1)) predictionTable <- mkTRegFile(
         replicate(ValueWithHysteresis {value: Invalid, hysteresis: 0})
     );
     // Registers to store the global history for this superscalar batch.
-    Vector#(SupSizeX2, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
+    Vector#(SupSizeX2, RWire#(Bool)) batchHistory <- replicateM(mkUnsafeRWire);
     Ehr#(SupSizeX2, GSelectBtbToken) currentPredictionToken <- mkEhr(0);
     TRegFile#(GSelectBtbToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSizeX2, 2), 1)) trainInfos <- mkTRegFile(
         replicate(Invalid)
@@ -114,7 +111,7 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
         return token;
     endactionvalue;
 
-    function GlobalHistory addGlobalHistory(GlobalHistory gh, Result new_item);
+    function GlobalHistory addGlobalHistory(GlobalHistory gh, Bool new_item);
         return shiftOutFromN(new_item, gh, 1);
     endfunction
     
@@ -182,8 +179,11 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 trainInfos.write[valueOf(SupSizeX2)+i] <= tuple2(token, Invalid);
 
                 if (mispred) begin
-                    // Rollback global history to before this prediction then add the correct result. 
-                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, actual);
+                    // Rollback global history to before this prediction then add the correct result.
+                    Bool v = False;
+                    if (actual matches tagged Valid .*)
+                        v = True;
+                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, v);
                     // Remove all other training information since the predictions should not have been made.
                     trainInfos.clear;
                 end
@@ -202,17 +202,18 @@ module [Module] mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 // Account for previous instructions in superscalar batch.
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
-
-                HashedIndex hIndex = hash(index);
-                ValueWithHysteresis vwh = predictionTable.read[hIndex];
+                ValueWithHysteresis vwh = predictionTable.read[index];
 
                 // Record that a prediction was made with the result.
-                batchHistory[sup].wset(vwh.value);
+                Bool v = False;
+                if (vwh.value matches tagged Valid .*)
+                    v = True;
+                batchHistory[sup].wset(v);
 
                 GSelectBtbToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
                 GSelectTrainInfo trainInfo = GSelectTrainInfo {
-                    index: hash(index),
+                    index: index,
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
                 };
