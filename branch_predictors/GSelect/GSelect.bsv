@@ -18,6 +18,14 @@ export mkGSelect;
 // Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
 // The predictor size is NumCounterBits * 2^(NumPcBits+(NumGlobalHistoryItems*SizeOf(Result)).
 
+
+// For ease of reading, assume HCHAL_OPTIMISED_COMPILE is not defined.
+`include "OptimisedCompileSettings.bsv"
+`ifdef HCHAL_OPTIMISED_COMPILE
+    import OptimisedCompile::*;
+`endif
+
+
 // A Boolean value for whether a branch should be (or was) taken.
 typedef Bool Result;
 
@@ -60,26 +68,38 @@ typedef struct {
 
 
 module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
-    staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
-    staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
-    staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
-
-
+    
     // The lower `NumPcBits` bits (minus 2 lowest) of the PC for first instruction in the superscalar batch.
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    TRegFile#(Index, ValueWithHysteresis, TAdd#(SupSize, 1)) predictionTable <- mkTRegFile(
-        replicate(ValueWithHysteresis {value: False, hysteresis: 0})
-    );
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
     Ehr#(SupSize, GSelectDirPredToken) currentPredictionToken <- mkEhr(0);
-    TRegFile#(GSelectDirPredToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSize, 2), 1)) trainInfos <- mkTRegFile(
-        replicate(Invalid)
-    );
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
+
+`ifndef HCHAL_OPTIMISED_COMPILE
+    TRegFile#(
+        Index, ValueWithHysteresis, TAdd#(SupSize, 1)
+    ) predictionTable <- mkTRegFile(
+        replicate(ValueWithHysteresis {value: False, hysteresis: 0})
+    );
+    TRegFile#(
+        GSelectDirPredToken,
+        Maybe#(GSelectTrainInfo),
+        TAdd#(TMul#(SupSize, 2), 1)
+    ) trainInfos <- mkTRegFile(replicate(Invalid));
+`else
+    TRegFile#(
+        Opt_GSelect_Index, Opt_GSelect_ValueWithHysteresis, TAdd#(SupSize, 1)
+    ) predictionTable <- mkOptimisedGSelectPredictionTable;
+    TRegFile#(
+        Opt_GSelect_GSelectDirPredToken,
+        Maybe#(Opt_GSelect_GSelectTrainInfo),
+        TAdd#(TMul#(SupSize, 2), 1)
+    ) trainInfos <- mkOptimisedGSelectTrainInfos;
+`endif
 
 
     function ActionValue#(GSelectDirPredToken) generatePredictionToken(Integer sup) = actionvalue
@@ -134,7 +154,13 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
             let token = updateInfo.token;
             let maybeActual = updateInfo.actual;
             // Sometimes this method may do nothing (no prediction was made with this token).
+`ifndef HCHAL_OPTIMISED_COMPILE
             Maybe#(GSelectTrainInfo) maybeTrainInfo = trainInfos.read[token];
+`else
+            Opt_GSelect_GSelectDirPredToken opt_token = token;
+            let opt_maybeTrainInfo = trainInfos.read[opt_token];
+            Maybe#(GSelectTrainInfo) maybeTrainInfo = unpack(pack(opt_maybeTrainInfo));
+`endif
             if (maybeTrainInfo matches tagged Valid .trainInfo) begin
                 // mispred used to be given explicitly, this is a way to get it again.
                 Bool mispred;
@@ -149,11 +175,25 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 end
 
                 // Update value with hysteresis and signal to store it.
+`ifndef HCHAL_OPTIMISED_COMPILE
                 let newVwh = updateValueWithHysteresis(predictionTable.read[trainInfo.index], actual);
                 predictionTable.write[i] <= tuple2(trainInfo.index, newVwh);
+`else
+                Opt_GSelect_Index opt_index = trainInfo.index;
+                let opt_oldVwh = predictionTable.read[opt_index];
+                ValueWithHysteresis oldVwh = unpack(pack(opt_oldVwh));
+                let newVwh = updateValueWithHysteresis(oldVwh, actual);
+                Opt_GSelect_ValueWithHysteresis opt_newVwh = unpack(pack(newVwh));
+                predictionTable.write[i] <= tuple2(opt_index, opt_newVwh);
+`endif
 
                 // Signal deletion of this training info.
+`ifndef HCHAL_OPTIMISED_COMPILE
                 trainInfos.write[valueOf(SupSize)+i] <= tuple2(token, Invalid);
+`else
+                Opt_GSelect_GSelectDirPredToken opt_token = token;
+                trainInfos.write[valueOf(SupSize)+i] <= tuple2(opt_token, Invalid);
+`endif
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
@@ -176,8 +216,12 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 // Account for previous instructions in superscalar batch.
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
-
+`ifndef HCHAL_OPTIMISED_COMPILE
                 ValueWithHysteresis vwh = predictionTable.read[index];
+`else
+                let opt_vwh = predictionTable.read[index];
+                ValueWithHysteresis vwh = unpack(pack(opt_vwh));
+`endif
 
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(vwh.value);
@@ -189,7 +233,14 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
                 };
+`ifndef HCHAL_OPTIMISED_COMPILE
                 trainInfos.write[sup] <= tuple2(predictionToken, Valid(trainInfo));
+`else
+                Opt_GSelect_GSelectDirPredToken opt_predictionToken = predictionToken;
+                Maybe#(Opt_GSelect_GSelectTrainInfo) opt_validTrainInfo = 
+                    unpack(pack(Valid(trainInfo)));
+                trainInfos.write[sup] <= tuple2(opt_predictionToken, opt_validTrainInfo);
+`endif
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
