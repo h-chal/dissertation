@@ -59,7 +59,7 @@ typedef struct {
 } UpdateInfo deriving(Bits);
 
 
-module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
+module mkGSelect(DirPredictor#(GSelectDirPredToken));
     staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
@@ -69,13 +69,23 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
     // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
-    TRegFile#(Index, ValueWithHysteresis, TAdd#(SupSize, 1)) predictionTable <- mkTRegFile(
+    TRegFile#(
+        Index,
+        ValueWithHysteresis,
+        TAdd#(SupSize, TAdd#(SupSize, 1)),
+        TAdd#(SupSize, 1)
+    ) predictionTable <- mkTRegFile(
         replicate(ValueWithHysteresis {value: False, hysteresis: 0})
     );
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
     Ehr#(SupSize, GSelectDirPredToken) currentPredictionToken <- mkEhr(0);
-    TRegFile#(GSelectDirPredToken, Maybe#(GSelectTrainInfo), TAdd#(TMul#(SupSize, 2), 1)) trainInfos <- mkTRegFile(
+    TRegFile#(
+        GSelectDirPredToken,
+        Maybe#(GSelectTrainInfo),
+        TAdd#(SupSize, 1),
+        TAdd#(SupSize, TAdd#(SupSize, 1))
+    ) trainInfos <- mkTRegFile(
         replicate(Invalid)
     );
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
@@ -134,7 +144,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
             let token = updateInfo.token;
             let maybeActual = updateInfo.actual;
             // Sometimes this method may do nothing (no prediction was made with this token).
-            Maybe#(GSelectTrainInfo) maybeTrainInfo = trainInfos.read[token];
+            Maybe#(GSelectTrainInfo) maybeTrainInfo = trainInfos.read[i].read(token);
             if (maybeTrainInfo matches tagged Valid .trainInfo) begin
                 // mispred used to be given explicitly, this is a way to get it again.
                 Bool mispred;
@@ -149,11 +159,14 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 end
 
                 // Update value with hysteresis and signal to store it.
-                let newVwh = updateValueWithHysteresis(predictionTable.read[trainInfo.index], actual);
-                predictionTable.write[i] <= tuple2(trainInfo.index, newVwh);
+                let newVwh = updateValueWithHysteresis(
+                    predictionTable.read[valueOf(SupSize)+i].read(trainInfo.index),
+                    actual
+                );
+                predictionTable.write[i].write(trainInfo.index, newVwh);
 
                 // Signal deletion of this training info.
-                trainInfos.write[valueOf(SupSize)+i] <= tuple2(token, Invalid);
+                trainInfos.write[valueOf(SupSize)+i].write(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
@@ -177,7 +190,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
 
-                ValueWithHysteresis vwh = predictionTable.read[index];
+                ValueWithHysteresis vwh = predictionTable.read[sup].read(index);
 
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(vwh.value);
@@ -189,7 +202,7 @@ module [Module] mkGSelect(DirPredictor#(GSelectDirPredToken));
                     vwh: vwh,
                     globalHistory: thisGlobalHistory
                 };
-                trainInfos.write[sup] <= tuple2(predictionToken, Valid(trainInfo));
+                trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
