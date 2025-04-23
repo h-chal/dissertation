@@ -193,10 +193,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result.
-                    Bool v = False;
-                    if (actual matches tagged Valid .*)
-                        v = True;
-                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, v);
+                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, isValid(actual));
                     // Remove all other training information since the predictions should not have been made.
                     trainInfos.clear;
                 end
@@ -218,10 +215,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 ValueWithHysteresis vwh = predictionTable.read[sup].read(index);
 
                 // Record that a prediction was made with the result.
-                Bool v = False;
-                if (vwh.value matches tagged Valid .*)
-                    v = True;
-                batchHistory[sup].wset(v);
+                batchHistory[sup].wset(isValid(vwh.value));
 
                 GSelectBtbToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
