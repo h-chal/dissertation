@@ -1,4 +1,4 @@
-// TODO try write queue
+// TODO try write queue with filter for unnecessary writes
 // TODO prioritise latest write not earliest
 
 import Vector::*;
@@ -43,7 +43,7 @@ module mkTRegFile#(Vector#(TExp#(indexSz), t) init)
         rule doWrite(!clearWire);
             t newVal = regs[i];
             for (Integer w = 0; w < valueOf(numWritePorts); w = w + 1)
-                if (writeWires[w].wget() matches tagged Valid {.writeIndex, .v} &&& writeIndex == fromInteger(i))
+                if (writeWires[valueOf(numWritePorts) - w - 1].wget() matches tagged Valid {.writeIndex, .v} &&& writeIndex == fromInteger(i))
                     newVal = v;
             regs[i] <= newVal;
         endrule
