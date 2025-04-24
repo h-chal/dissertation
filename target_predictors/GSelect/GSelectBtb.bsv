@@ -9,6 +9,7 @@ import Vector::*;
 import RegFile::*;
 import Assert::*;
 import TRegFile::*;
+import ValueWithConfidence::*;
 
 export GSelectBtbToken;
 export mkGSelectBtb;
@@ -38,19 +39,10 @@ typedef struct {
 
 
 // This BTB uses bits from the PC concatenated with global history to index a table of saturation counters.
-// Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
 // The predictor size is NumCounterBits * 2^(NumPcBits+(NumGlobalHistoryItems*SizeOf(Result)).
 
 // Valid(target) for a branch/jump to target, or Invalid for continuing to PC+2.
 typedef Maybe#(Addr) Result;
-
-// The number of hysteresis bits in each saturating counter.
-// 1 <= NumCounterBits.
-typedef 1 NumCounterBits;
-typedef struct {
-    Result value;
-    UInt#(NumCounterBits) hysteresis;
-} ValueWithHysteresis deriving(Bits, Eq, FShow);
 
 // The number of bits from the PC to index the table of saturating counters.
 // The bits used exclude the two lowest bits of the PC.
@@ -72,7 +64,7 @@ typedef TExp#(SizeOf#(GSelectBtbToken)) NumPastPreds;
 
 typedef struct {
     Index index;
-    ValueWithHysteresis vwh;
+    ValueWithConfidence#(Result) vwc;
     GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 
@@ -83,7 +75,6 @@ typedef struct {
 
 
 module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
-    staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
 
@@ -94,11 +85,11 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     TRegFile#(
         Index,
-        ValueWithHysteresis,
+        ValueWithConfidence#(Result),
         TAdd#(SupSizeX2, TAdd#(SupSizeX2, 1)),
         TAdd#(SupSizeX2, 1)
     ) predictionTable <- mkTRegFile(
-        replicate(ValueWithHysteresis {value: Invalid, hysteresis: 0})
+        replicate(ValueWithConfidence {value: Invalid, confidence: 0})
     );
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSizeX2, RWire#(Bool)) batchHistory <- replicateM(mkUnsafeRWire);
@@ -135,26 +126,6 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
         return globalHistoryWithBatchHistory;
     endactionvalue;
 
-    function ValueWithHysteresis updateValueWithHysteresis(ValueWithHysteresis vwh, Result new_value);
-        if (vwh.value == new_value)
-            return ValueWithHysteresis {
-                value: vwh.value,
-                hysteresis: boundedPlus(vwh.hysteresis, 1)
-            };
-        else begin
-            if (vwh.hysteresis > 0)
-                return ValueWithHysteresis {
-                    value: vwh.value,
-                    hysteresis: vwh.hysteresis - 1
-                };
-            else
-                return ValueWithHysteresis {
-                    value: new_value,
-                    hysteresis: 0
-                };
-        end
-    endfunction
-
     rule updateGlobalHistory;
         // Reading all of `batchHistory` causes this rule to be scheduled after all predictions.
         let gh <- globalHistoryWithBatchHistoryUpTo(valueOf(SupSizeX2)); globalHistory <= gh;
@@ -173,20 +144,20 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 Bool mispred;
                 Result actual;
                 if (maybeActual matches tagged Valid .actual_) begin
-                    mispred = (actual_ != trainInfo.vwh.value);
+                    mispred = (actual_ != trainInfo.vwc.value);
                     actual = actual_;
                 end else begin
                     mispred = False;
                     // Deal with implicit updates (old predictions) by assuming we are correct.
-                    actual = trainInfo.vwh.value;
+                    actual = trainInfo.vwc.value;
                 end
 
-                // Update value with hysteresis and signal to store it.
-                let newVwh = updateValueWithHysteresis(
+                // Update value with confidence and signal to store it.
+                let newvwc = updateValueWithConfidence(
                     predictionTable.read[valueOf(SupSizeX2)+i].read(trainInfo.index),
                     actual
                 );
-                predictionTable.write[i].write(trainInfo.index, newVwh);
+                predictionTable.write[i].write(trainInfo.index, newvwc);
 
                 // Signal deletion of this training info.
                 trainInfos.write[valueOf(SupSizeX2)+i].write(token, Invalid);
@@ -212,16 +183,16 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 // Account for previous instructions in superscalar batch.
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
-                ValueWithHysteresis vwh = predictionTable.read[sup].read(index);
+                let vwc = predictionTable.read[sup].read(index);
 
                 // Record that a prediction was made with the result.
-                batchHistory[sup].wset(isValid(vwh.value));
+                batchHistory[sup].wset(isValid(vwc.value));
 
                 GSelectBtbToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
                 GSelectTrainInfo trainInfo = GSelectTrainInfo {
                     index: index,
-                    vwh: vwh,
+                    vwc: vwc,
                     globalHistory: thisGlobalHistory
                 };
                 trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
@@ -229,7 +200,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
                 return BtbResult {
-                    maybeAddr: vwh.value,
+                    maybeAddr: vwc.value,
                     token: predictionToken
                 };
             endmethod

@@ -9,25 +9,18 @@ import Vector::*;
 import RegFile::*;
 import Assert::*;
 import TRegFile::*;
+import ValueWithConfidence::*;
 
 export GSelectDirPredToken;
 export mkGSelect;
 
 
 // This branch predictor uses bits from the PC concatenated with global history to index a table of saturation counters.
-// Booleans with a 1-bit counter (ValueWithHysteresis) is used in place of 2-bit saturating counters.
+// Booleans with a 1-bit counter (ValueWithHysteresis) are used in place of 2-bit saturating counters.
 // The predictor size is NumCounterBits * 2^(NumPcBits+(NumGlobalHistoryItems*SizeOf(Result)).
 
 // A Boolean value for whether a branch should be (or was) taken.
 typedef Bool Result;
-
-// The number of hysteresis bits in each saturating counter.
-// 1 <= NumCounterBits.
-typedef 1 NumCounterBits;
-typedef struct {
-    Result value;
-    UInt#(NumCounterBits) hysteresis;
-} ValueWithHysteresis deriving(Bits, Eq, FShow);
 
 // The number of bits from the PC to index the table of saturating counters.
 // The bits used exclude the two lowest bits of the PC.
@@ -49,7 +42,7 @@ typedef TExp#(SizeOf#(GSelectDirPredToken)) NumPastPreds;
 
 typedef struct {
     Index index;
-    ValueWithHysteresis vwh;
+    ValueWithConfidence#(Result) vwc;
     GlobalHistory globalHistory;
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 
@@ -60,7 +53,6 @@ typedef struct {
 
 
 module mkGSelect(DirPredictor#(GSelectDirPredToken));
-    staticAssert(1 <= valueOf(NumCounterBits), "Must have 1 <= NumCounterBits");
     staticAssert(1 <= valueOf(NumPcBits) && valueOf(NumPcBits) <= valueOf(AddrSz) - 2, "Must have 1 <= NumPcBits <= AddrSz - 2");
     staticAssert(1 <= valueOf(NumGlobalHistoryItems), "Must have 1 <= NumGlobalHistoryItems");
 
@@ -71,11 +63,11 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     TRegFile#(
         Index,
-        ValueWithHysteresis,
+        ValueWithConfidence#(Result),
         TAdd#(SupSize, TAdd#(SupSize, 1)),
         TAdd#(SupSize, 1)
     ) predictionTable <- mkTRegFile(
-        replicate(ValueWithHysteresis {value: False, hysteresis: 0})
+        replicate(ValueWithConfidence {value: False, confidence: 0})
     );
     // Registers to store the global history for this superscalar batch.
     Vector#(SupSize, RWire#(Result)) batchHistory <- replicateM(mkUnsafeRWire);
@@ -112,26 +104,6 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
         return globalHistoryWithBatchHistory;
     endactionvalue;
 
-    function ValueWithHysteresis updateValueWithHysteresis(ValueWithHysteresis vwh, Result new_value);
-        if (vwh.value == new_value)
-            return ValueWithHysteresis {
-                value: vwh.value,
-                hysteresis: boundedPlus(vwh.hysteresis, 1)
-            };
-        else begin
-            if (vwh.hysteresis > 0)
-                return ValueWithHysteresis {
-                    value: vwh.value,
-                    hysteresis: vwh.hysteresis - 1
-                };
-            else
-                return ValueWithHysteresis {
-                    value: new_value,
-                    hysteresis: 0
-                };
-        end
-    endfunction
-
     rule updateGlobalHistory;
         // Reading all of `batchHistory` causes this rule to be scheduled after all predictions.
         let gh <- globalHistoryWithBatchHistoryUpTo(valueOf(SupSize)); globalHistory <= gh;
@@ -150,20 +122,20 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 Bool mispred;
                 Result actual;
                 if (maybeActual matches tagged Valid .actual_) begin
-                    mispred = (actual_ != trainInfo.vwh.value);
+                    mispred = (actual_ != trainInfo.vwc.value);
                     actual = actual_;
                 end else begin
                     mispred = False;
                     // Deal with implicit updates (old predictions) by assuming we are correct.
-                    actual = trainInfo.vwh.value;
+                    actual = trainInfo.vwc.value;
                 end
 
-                // Update value with hysteresis and signal to store it.
-                let newVwh = updateValueWithHysteresis(
+                // Update value with confidence and signal to store it.
+                let newVwc = updateValueWithConfidence(
                     predictionTable.read[valueOf(SupSize)+i].read(trainInfo.index),
                     actual
                 );
-                predictionTable.write[i].write(trainInfo.index, newVwh);
+                predictionTable.write[i].write(trainInfo.index, newVwc);
 
                 // Signal deletion of this training info.
                 trainInfos.write[valueOf(SupSize)+i].write(token, Invalid);
@@ -190,16 +162,16 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
 
-                ValueWithHysteresis vwh = predictionTable.read[sup].read(index);
+                let vwc = predictionTable.read[sup].read(index);
 
                 // Record that a prediction was made with the result.
-                batchHistory[sup].wset(vwh.value);
+                batchHistory[sup].wset(vwc.value);
 
                 GSelectDirPredToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
                 GSelectTrainInfo trainInfo = GSelectTrainInfo {
                     index: index,
-                    vwh: vwh,
+                    vwc: vwc,
                     globalHistory: thisGlobalHistory
                 };
                 trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
@@ -207,7 +179,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
                 return DirPredResult {
-                    taken: vwh.value,
+                    taken: vwc.value,
                     token: predictionToken
                 };
             endmethod
