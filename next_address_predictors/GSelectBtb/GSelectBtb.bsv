@@ -1,10 +1,8 @@
-`ifdef USING_TOOOBA
-import Types::*;
-import ProcTypes::*;
-`endif
-import BrPred::*;
-import Ehr::*;
+import BtbIfc::*;
 
+import ProcTypes::*;
+import Types::*;
+import Ehr::*;
 import Vector::*;
 import RegFile::*;
 import Assert::*;
@@ -13,29 +11,6 @@ import ValueWithConfidence::*;
 
 export GSelectBtbToken;
 export mkGSelectBtb;
-
-export NextAddrPred(..);
-export BtbResult(..);
-export BtbPred(..);
-
-interface BtbPred#(type btbTokenT);
-    method ActionValue#(BtbResult#(btbTokenT)) pred;
-endinterface
-
-interface NextAddrPred#(type btbTokenT);
-    //method Action put_pc(Addr pc);
-    method Action nextPc(Addr pc);
-    interface Vector#(SupSizeX2, BtbPred#(btbTokenT)) pred;
-    method Action update(btbTokenT token, Maybe#(Addr) brTarget);
-    // security
-    method Action flush;
-    method Bool flush_done;
-endinterface
-
-typedef struct {
-    Maybe#(Addr) maybeAddr;
-    btbTokenT token; // info for future training
-} BtbResult#(type btbTokenT) deriving(Bits, Eq, FShow);
 
 
 // This BTB uses bits from the PC concatenated with global history to index a table of saturation counters.
@@ -173,10 +148,10 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     endrule
 
     // Vector to interfaces since Toooba is superscalar.
-    // interface Vector#(SupSizeX2, BtbPred#(trainInfoT)) pred;
-    function BtbPred#(GSelectBtbToken) superscalarPred(Integer sup);
-        return (interface BtbPred#(GSelectBtbToken);
-            method ActionValue#(BtbResult#(GSelectBtbToken)) pred;
+    // interface Vector#(SupSizeX2, NapPred#(trainInfoT)) pred;
+    function NapPred#(GSelectBtbToken) superscalarPred(Integer sup);
+        return (interface NapPred#(GSelectBtbToken);
+            method ActionValue#(NapResult#(GSelectBtbToken)) pred;
                 // Get the true PC (minus 1 lower bit and upper bits) for this instruction.
                 let pcChopped = pcChoppedBase + fromInteger(sup);
 
@@ -201,7 +176,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
-                return BtbResult {
+                return NapResult {
                     maybeAddr: prediction,
                     token: predictionToken
                 };
