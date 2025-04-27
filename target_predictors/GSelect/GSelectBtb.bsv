@@ -64,8 +64,8 @@ typedef TExp#(SizeOf#(GSelectBtbToken)) NumPastPreds;
 
 typedef struct {
     Index index;
-    ValueWithConfidence#(Result) vwc;
-    GlobalHistory globalHistory;
+    Result prediction;
+    GlobalHistory globalHistory;  // Some redundancy with index.
 } GSelectTrainInfo deriving(Bits, Eq, FShow);
 
 typedef struct {
@@ -144,12 +144,12 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 Bool mispred;
                 Result actual;
                 if (maybeActual matches tagged Valid .actual_) begin
-                    mispred = (actual_ != trainInfo.vwc.value);
+                    mispred = (actual_ != trainInfo.prediction);
                     actual = actual_;
                 end else begin
                     mispred = False;
                     // Deal with implicit updates (old predictions) by assuming we are correct.
-                    actual = trainInfo.vwc.value;
+                    actual = trainInfo.prediction;
                 end
 
                 // Update value with confidence and signal to store it.
@@ -183,16 +183,18 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 // Account for previous instructions in superscalar batch.
                 GlobalHistory thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 Index index = {pcChopped, pack(thisGlobalHistory)};
+
                 let vwc = predictionTable.read[sup].read(index);
+                let prediction = vwc.value;
 
                 // Record that a prediction was made with the result.
-                batchHistory[sup].wset(isValid(vwc.value));
+                batchHistory[sup].wset(isValid(prediction));
 
                 GSelectBtbToken predictionToken <- generatePredictionToken(sup);
                 $display("gselect pred pc=%d, token=%d", pcChopped, predictionToken);
                 GSelectTrainInfo trainInfo = GSelectTrainInfo {
                     index: index,
-                    vwc: vwc,
+                    prediction: prediction,
                     globalHistory: thisGlobalHistory
                 };
                 trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
@@ -200,7 +202,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
                 return BtbResult {
-                    maybeAddr: vwc.value,
+                    maybeAddr: prediction,
                     token: predictionToken
                 };
             endmethod
