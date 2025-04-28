@@ -151,7 +151,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     // interface Vector#(SupSizeX2, NapPred#(trainInfoT)) pred;
     function NapPred#(GSelectBtbToken) superscalarPred(Integer sup);
         return (interface NapPred#(GSelectBtbToken);
-            method ActionValue#(NapResult#(GSelectBtbToken)) pred;
+            method ActionValue#(NapPredResult#(GSelectBtbToken)) pred;
                 // Get the true PC (minus 1 lower bit and upper bits) for this instruction.
                 let pcChopped = pcChoppedBase + fromInteger(sup);
 
@@ -176,7 +176,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
-                return NapResult {
+                return NapPredResult {
                     maybeAddr: prediction,
                     token: predictionToken
                 };
