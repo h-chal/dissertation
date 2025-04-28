@@ -9,39 +9,39 @@ export TWriter(..);
 
 
 // Transactional Register File
-interface TRegFile#(type index, type t, numeric type numReadPorts, numeric type numWritePorts);
-    interface Vector#(numReadPorts, TReader#(index, t)) read;
-    interface Vector#(numWritePorts, TWriter#(index, t)) write;
+interface TRegFile#(type indexT, type dataT, numeric type numReadPorts, numeric type numWritePorts);
+    interface Vector#(numReadPorts, TReader#(indexT, dataT)) read;
+    interface Vector#(numWritePorts, TWriter#(indexT, dataT)) write;
     method Action clear();
 endinterface
 
-interface TReader#(type index, type t);
-    method t read(index i);
+interface TReader#(type indexT, type dataT);
+    method dataT read(indexT i);
 endinterface
 
-interface TWriter#(type index, type t);
-    method Action write(index i, t v);
+interface TWriter#(type indexT, type dataT);
+    method Action write(indexT i, dataT v);
 endinterface
 
 
-module mkTRegFile#(Vector#(TExp#(indexSz), t) init)
-	(TRegFile#(index, t, numReadPorts, numWritePorts))
+module mkTRegFile#(Vector#(TExp#(indexSz), dataT) init)
+	(TRegFile#(indexT, dataT, numReadPorts, numWritePorts))
 	provisos (
-        Bits#(index, indexSz), PrimIndex#(index, indexSz), Arith#(index), Ord#(index),
-        Bits#(t, tSz)
+        Bits#(indexT, indexSz), PrimIndex#(indexT, indexPrimIndex), Arith#(indexT), Ord#(indexT),
+        Bits#(dataT, dataSz)
     );
 
-    module mkRegInit#(Integer i) (Reg#(t));
+    module mkRegInit#(Integer i) (Reg#(dataT));
         let m <- mkReg(init[i]);
         return m;
     endmodule
-	Vector#(TExp#(SizeOf#(index)), Reg#(t)) regs <- genWithM(mkRegInit);
-    Vector#(numWritePorts, RWire#(Tuple2#(index, t))) writeWires <- replicateM(mkRWire);
+	Vector#(TExp#(indexSz), Reg#(dataT)) regs <- genWithM(mkRegInit);
+    Vector#(numWritePorts, RWire#(Tuple2#(indexT, dataT))) writeWires <- replicateM(mkRWire);
     PulseWire clearWire <- mkPulseWireOR;
 
     for (Integer i = 0; i < valueOf(TExp#(indexSz)); i = i + 1)
         rule doWrite(!clearWire);
-            t newVal = regs[i];
+            dataT newVal = regs[i];
             for (Integer w = 0; w < valueOf(numWritePorts); w = w + 1)
                 if (writeWires[valueOf(numWritePorts) - w - 1].wget() matches tagged Valid {.writeIndex, .v} &&& writeIndex == fromInteger(i))
                     newVal = v;
@@ -53,16 +53,16 @@ module mkTRegFile#(Vector#(TExp#(indexSz), t) init)
     endrule
 
 
-    function TWriter#(index, t) mkTWriter(Integer w);
-        return interface TWriter#(index, t);
-            method Action write(index i, t v);
+    function TWriter#(indexT, dataT) mkTWriter(Integer w);
+        return interface TWriter#(indexT, dataT);
+            method Action write(indexT i, dataT v);
                 writeWires[w].wset(tuple2(i, v));
             endmethod
         endinterface;
     endfunction
     interface read = replicate(
-        interface TReader#(index, t);
-            method t read(index i);
+        interface TReader#(indexT, dataT);
+            method dataT read(indexT i);
                 return regs[i];
             endmethod
         endinterface
