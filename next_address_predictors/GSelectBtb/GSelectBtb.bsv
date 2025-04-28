@@ -191,7 +191,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
         );
     endmethod
 
-    method Action nextPc(Addr pc);
+    method Action put_pc(Addr pc);
         // Remove a lower bit because instruction fragments are half-word aligned.
         // Then remove MSBs to fit into NumPcBits.
         pcChoppedBase <= truncate(pc >> 1);
