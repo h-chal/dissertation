@@ -56,7 +56,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
 
     // The lower `NumPcBits` bits (minus lowest) of the PC for first instruction in the superscalar batch.
     Reg#(ChoppedAddr) pcChoppedBase <- mkRegU;
-    // The global history of conditional branch results (taken/not taken). The MSB is the oldest result.
+    // The global history of partial branch targets (valid bit only - was there a jump/taken branch?). The MSB is the oldest result.
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     TRegFile#(
         Index,
