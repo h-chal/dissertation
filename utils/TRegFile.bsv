@@ -43,7 +43,7 @@ module mkTRegFile#(Vector#(TExp#(indexSz), dataT) init)
         rule doWrite(!clearWire);
             dataT newVal = regs[i];
             for (Integer w = 0; w < valueOf(numWritePorts); w = w + 1)
-                if (writeWires[valueOf(numWritePorts) - w - 1].wget() matches tagged Valid {.writeIndex, .v} &&& writeIndex == fromInteger(i))
+                if (writeWires[w].wget() matches tagged Valid {.writeIndex, .v} &&& writeIndex == fromInteger(i))
                     newVal = v;
             regs[i] <= newVal;
         endrule
