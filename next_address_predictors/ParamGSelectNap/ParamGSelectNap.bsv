@@ -17,7 +17,8 @@ module mkParamGSelectNap(NextAddrPred#(ParamGSelectNapToken));
         SupSizeX2,                  // numPreds
         4,                          // numPcBits
         8,                          // numGlobalHistoryItems
-        Bool                        // globalHistoryItemT
+        Bool,                       // globalHistoryItemT
+        1                           // numConfidenceBits
     ) predictor <- mkParamGSelect(
         'b11110,                    // pcBitMask
         Invalid,                    // defaultPrediction

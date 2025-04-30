@@ -61,7 +61,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     TRegFile#(
         Index,
-        ValueWithConfidence#(Result),
+        ValueWithConfidence#(Result, 1),
         TAdd#(SupSize, TAdd#(SupSize, 1)),
         TAdd#(SupSize, 1)
     ) predictionTable <- mkTRegFile(

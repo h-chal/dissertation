@@ -17,7 +17,8 @@ module mkParamGSelectBdp(DirPredictor#(ParamGSelectBdpToken));
         SupSize,                    // numPreds
         4,                          // numPcBits
         8,                          // numGlobalHistoryItems
-        Bool                        // globalHistoryItemT
+        Bool,                       // globalHistoryItemT
+        1                           // numConfidenceBits
     ) predictor <- mkParamGSelect(
         'b111100,                   // pcBitMask
         False,                      // defaultPrediction

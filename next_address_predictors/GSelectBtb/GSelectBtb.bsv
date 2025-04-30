@@ -60,7 +60,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     Reg#(GlobalHistory) globalHistory <- mkRegU;
     TRegFile#(
         Index,
-        ValueWithConfidence#(Result),
+        ValueWithConfidence#(Result, 1),
         TAdd#(SupSizeX2, TAdd#(SupSizeX2, 1)),
         TAdd#(SupSizeX2, 1)
     ) predictionTable <- mkTRegFile(

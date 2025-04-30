@@ -1,10 +1,13 @@
 typedef struct {
     t value;
-    UInt#(1) confidence;
-} ValueWithConfidence#(type t) deriving (Bits, Eq, FShow);
+    UInt#(numConfidenceBits) confidence;
+} ValueWithConfidence#(type t, numeric type numConfidenceBits) deriving (Bits, Eq, FShow);
 
 
-function ValueWithConfidence#(t) updateValueWithConfidence(ValueWithConfidence#(t) current, t newValue) provisos (Eq#(t));
+function ValueWithConfidence#(t, numConfidenceBits) updateValueWithConfidence
+    (ValueWithConfidence#(t, numConfidenceBits) current, t newValue)
+    provisos (Eq#(t));
+
     if (current.value == newValue)
         return ValueWithConfidence {
             value: current.value,

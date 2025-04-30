@@ -29,7 +29,8 @@ interface ParamGSelect#(
     numeric type numPreds,
     numeric type numPcBits,
     numeric type numGlobalHistoryItems,
-    type globalHistoryT
+    type globalHistoryT,
+    numeric type numConfidenceBits
 );
     method Action nextPc(Addr nextPc);
     interface Vector#(numPreds, Predict#(tokenT, resultT)) predict;
@@ -54,7 +55,7 @@ module mkParamGSelect#(
     Addr pcBitMask,  // Must have numPcBits set bits.
     resultT defaultPrediction,
     function globalHistoryItemT makeGlobalHistoryItem(resultT result)  // Which bits of the result to remember for global history.
-) (ParamGSelect#(resultT, tokenT, numPreds, numPcBits, numGlobalHistoryItems, globalHistoryItemT))
+) (ParamGSelect#(resultT, tokenT, numPreds, numPcBits, numGlobalHistoryItems, globalHistoryItemT, numConfidenceBits))
     provisos(
         Alias#(choppedAddr, Bit#(numPcBits)),
         Alias#(globalHistoryT, Vector#(numGlobalHistoryItems, globalHistoryItemT)),
@@ -75,7 +76,7 @@ module mkParamGSelect#(
     Reg#(globalHistoryT) globalHistory <- mkRegU;
     TRegFile#(
         index,
-        ValueWithConfidence#(resultT),
+        ValueWithConfidence#(resultT, numConfidenceBits),
         TAdd#(numPreds, TAdd#(numPreds, 1)),
         TAdd#(numPreds, 1)
     ) predictionTable <- mkTRegFile(
