@@ -29,7 +29,7 @@ interface ParamGSelect#(
     numeric type numPreds,
     numeric type numPcBits,
     numeric type numGlobalHistoryItems,
-    type globalHistoryT,
+    type globalHistoryItemT,
     numeric type numConfidenceBits
 );
     method Action nextPc(Addr nextPc);
@@ -44,7 +44,7 @@ typedef struct {
     indexT index;
     resultT prediction;
     globalHistoryT globalHistory;  // Some redundancy with index.
-} TrainInfo#(type indexT, type resultT, type globalHistoryT) deriving(Bits, Eq, FShow);
+} TrainInfo#(type indexT, type resultT, type globalHistoryItemT) deriving(Bits, Eq, FShow);
 
 typedef struct {
     tokenT token;
