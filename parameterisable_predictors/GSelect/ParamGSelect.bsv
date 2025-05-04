@@ -93,6 +93,8 @@ module mkParamGSelect#(
     ) trainInfos <- mkTRegFile(
         replicate(Invalid)
     );
+    Integer trainInfosWritePort_preds = valueOf(numPreds) + 1;
+    Integer trainInfosWritePort_deletions = 0;
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(numPreds, 1), RWire#(UpdateInfo#(tokenT, resultT))) updateInfos <- replicateM(mkUnsafeRWire);
 
@@ -150,8 +152,8 @@ module mkParamGSelect#(
                 );
                 predictionTable.write[i].write(trainInfo.index, newVwc);
 
-                // Signal deletion of this training info.
-                trainInfos.write[valueOf(numPreds)+i].write(token, Invalid);
+                // Signal deletion of this training info. If it is written to later this deletion does not take effect.
+                trainInfos.write[trainInfosWritePort_deletions + i].write(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
@@ -187,7 +189,7 @@ module mkParamGSelect#(
                     prediction: prediction,
                     globalHistory: thisGlobalHistory
                 };
-                trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
+                trainInfos.write[trainInfosWritePort_preds + sup].write(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 

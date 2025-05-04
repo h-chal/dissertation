@@ -77,6 +77,8 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
     ) trainInfos <- mkTRegFile(
         replicate(Invalid)
     );
+    Integer trainInfosWritePort_preds = valueOf(SupSizeX2) + 1;
+    Integer trainInfosWritePort_deletions = 0;
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(SupSizeX2, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
 
@@ -134,8 +136,8 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                 );
                 predictionTable.write[i].write(trainInfo.index, newvwc);
 
-                // Signal deletion of this training info.
-                trainInfos.write[valueOf(SupSizeX2)+i].write(token, Invalid);
+                // Signal deletion of this training info. If it is written to later this deletion does not take effect.
+                trainInfos.write[trainInfosWritePort_deletions + i].write(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result.
@@ -172,7 +174,7 @@ module mkGSelectBtb(NextAddrPred#(GSelectBtbToken));
                     prediction: prediction,
                     globalHistory: thisGlobalHistory
                 };
-                trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
+                trainInfos.write[trainInfosWritePort_preds + sup].write(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 

@@ -78,6 +78,8 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
     ) trainInfos <- mkTRegFile(
         replicate(Invalid)
     );
+    Integer trainInfosWritePort_preds = valueOf(SupSize) + 1;
+    Integer trainInfosWritePort_deletions = 0;
     // Each prediction may replace another and we assume the old one to be correct. One more slot for an explicit update.
     Vector#(TAdd#(SupSize, 1), RWire#(UpdateInfo)) updateInfos <- replicateM(mkUnsafeRWire);
 
@@ -135,8 +137,8 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                 );
                 predictionTable.write[i].write(trainInfo.index, newVwc);
 
-                // Signal deletion of this training info.
-                trainInfos.write[valueOf(SupSize)+i].write(token, Invalid);
+                // Signal deletion of this training info. If it is written to later this deletion does not take effect.
+                trainInfos.write[trainInfosWritePort_deletions + i].write(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
@@ -173,7 +175,7 @@ module mkGSelect(DirPredictor#(GSelectDirPredToken));
                     prediction: prediction,
                     globalHistory: thisGlobalHistory
                 };
-                trainInfos.write[sup].write(predictionToken, Valid(trainInfo));
+                trainInfos.write[trainInfosWritePort_preds + sup].write(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
                 updateInfos[sup].wset(UpdateInfo {token: predictionToken, actual: Invalid});
 
