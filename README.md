@@ -1,15 +1,24 @@
-To run ChampSim with a given Bluespec SystemVerilog predictor, called `x`:
-- Name the predictor in `ChampSimWrapper/config.json`
-- Ensure that `branch_predictors/x/x.bsv` exists
+Use `BSC_COMPILATION_FLAGS` in `Include_RISCY_Config.mk` to decide which predictors to use, then do `make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim clean` after changing the config.
+E.g.,
 ```
-git submodule update --init --recursive
-
-cd ChampSimWrapper/ChampSim
-vcpkg/bootstrap-vcpkg.sh
-vcpkg/vcpkg install
-cd ../..
-
-wget -P traces/DPC-3 https://dpc3.compas.cs.stonybrook.edu/champsim-traces/speccpu/600.perlbench_s-210B.champsimtrace.xz
-
-ChampSimWrapper/try_champsim_bsv_branch.sh
+-D ALTERNATE_IFC_NAP \
+-D ALTERNATE_IFC_NAP_PARAM \
+-D ALTERNATE_IFC_BDP \
+-D ALTERNATE_IFC_BDP_PARAM
 ```
+will use my alternative interfaces for branch direction prediction (BDP) and next-address prediction(NAP -- similar to BTB). Furthermore, it will use instantiations of the parameterisable Gselect predictor.
+
+To run CoreMark, do `TooobaWrapper/try_coremark.sh`.
+
+To run benchmarks, \[TODO\].
+
+To run RISC-V ISA tests:
+```
+make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim isa_tests
+```
+
+To run unit tests for my utilities:
+```
+make -C tests
+```
+(You can also use `make -C tests TEST=testname` to run `testname.bsv` only.)
