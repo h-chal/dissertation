@@ -1,20 +1,33 @@
-# TODO
-# Configure which predictor used. ProcConfig.bsv. try putting it in a less central file for faster make
-# Recompile when config changed or predictor source changed
-
+#!/bin/bash
 set -e
 trap 'notify-send "Toooba CoreMark failed."' ERR
 
 cd TooobaWrapper
 
-# Filter known warnings from stderr and ignore stdout.
+# Recompile
 ./filter_known_warnings.py -b baseline_make_err.txt -- \
 make -C Toooba/builds/RV64ACDFIMSU_Toooba_bluesim compile simulator > /dev/null
 
 ln -fs coremark_gcc.hex Mem.hex
 
-Toooba/builds/RV64ACDFIMSU_Toooba_bluesim/exe_HW_sim > /tmp/toooba_output.txt
+SIM_CMD="Toooba/builds/RV64ACDFIMSU_Toooba_bluesim/exe_HW_sim"
 
-tail --lines=1 /tmp/toooba_output.txt | xargs
+# Start simulation in background
+TMP_OUT=$(mktemp)
+$SIM_CMD > "$TMP_OUT" 2>&1 &
+
+SIM_PID=$!
+
+# Monitor for instret:188799
+while sleep 0.2; do
+    if grep -q "instret:188799" "$TMP_OUT"; then
+        kill "$SIM_PID"
+        wait "$SIM_PID" 2>/dev/null || true
+        LINE=$(grep "instret:188799" "$TMP_OUT" | tail -n 1)
+        CYCLES=$(echo "$LINE" | awk '{print $NF}')
+        echo "Cycles: $CYCLES"
+        break
+    fi
+done
 
 notify-send "Toooba CoreMark finished."
