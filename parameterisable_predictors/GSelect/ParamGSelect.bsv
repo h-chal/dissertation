@@ -44,7 +44,7 @@ typedef struct {
     indexT index;
     resultT prediction;
     globalHistoryT globalHistory;  // Some redundancy with index.
-} TrainInfo#(type indexT, type resultT, type globalHistoryItemT) deriving(Bits, Eq, FShow);
+} TrainInfo#(type indexT, type resultT, type globalHistoryT) deriving(Bits, Eq, FShow);
 
 typedef struct {
     tokenT token;
