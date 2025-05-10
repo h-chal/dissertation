@@ -28,7 +28,8 @@ module mkTRegFile#(Vector#(TExp#(indexSz), dataT) init)
 	(TRegFile#(indexT, dataT, numReadPorts, numWritePorts))
 	provisos (
         Bits#(indexT, indexSz), PrimIndex#(indexT, indexPrimIndex), Arith#(indexT), Ord#(indexT),
-        Bits#(dataT, dataSz)
+        // Bits#(dataT, dataSz),
+        // Eq#(dataT)  // for evaluationOutput
     );
 
     module mkRegInit#(Integer i) (Reg#(dataT));
@@ -38,6 +39,19 @@ module mkTRegFile#(Vector#(TExp#(indexSz), dataT) init)
 	Vector#(TExp#(indexSz), Reg#(dataT)) regs <- genWithM(mkRegInit);
     Vector#(numWritePorts, RWire#(Tuple2#(indexT, dataT))) writeWires <- replicateM(mkRWire);
     PulseWire clearWire <- mkPulseWireOR;
+
+    // rule evaluationOutput;
+    //     let t <- $time;
+    //     if (t % 1000 == 0) begin
+    //         let vals = readVReg(regs);
+    //         function equalInitial(Tuple2#(dataT, dataT) pair);
+    //             return tpl_1(pair) == tpl_2(pair);
+    //         endfunction
+    //         let numSame = countIf(equalInitial, zip(vals, init));
+    //         $display("TREGFILE_ANALYSIS ", init[0], ": ", numSame);  // Output init[0] so we can tell if this is BDP or NAP.
+    //     end
+    // endrule
+
 
     for (Integer i = 0; i < valueOf(TExp#(indexSz)); i = i + 1)
         rule doWrite(!clearWire);

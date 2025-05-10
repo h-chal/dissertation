@@ -15,12 +15,12 @@ module mkParamGSelectNap(NextAddrPred#(ParamGSelectNapToken));
         Maybe#(Addr),               // resultT
         ParamGSelectNapToken,       // tokenT
         SupSizeX2,                  // numPreds
-        4,                          // numPcBits
-        8,                          // numGlobalHistoryItems
+        3,                          // numPcBits
+        7,                          // numGlobalHistoryItems
         Bool,                       // globalHistoryItemT
         1                           // numConfidenceBits
     ) predictor <- mkParamGSelect(
-        'b11110,                    // pcBitMask
+        'b1110,                    // pcBitMask
         Invalid,                    // defaultPrediction
         isValid                     // globalHistoryItemT makeGlobalHistoryItem(resultT result)
     );

@@ -66,7 +66,10 @@ module mkParamGSelect#(
         Bits#(tokenT, tokenSz),
         Ord#(tokenT),
         PrimIndex#(tokenT, tokenEntries),
-        Arith#(tokenT)
+        Arith#(tokenT),
+
+        // Eq#(tokenT),  // for TRegFile evaluationOutput
+        // Eq#(globalHistoryItemT)  // for TRegFile evaluationOutput
     );
 
     staticAssert(fromInteger(valueOf(numPcBits)) == countOnes(pcBitMask), "pcBitMask must have numPcBits bits.");

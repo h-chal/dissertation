@@ -4,3 +4,5 @@ TooobaWrapper/Mem.hex
 
 tests/build
 tests/build_bsim
+
+.~lock*
