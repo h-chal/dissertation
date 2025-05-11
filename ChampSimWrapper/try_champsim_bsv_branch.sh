@@ -19,7 +19,7 @@ usage() {
 VERBOSE=false
 WARMUP_INSTRUCTIONS=200000
 SIMULATION_INSTRUCTIONS=500000
-TRACE="traces/DPC-3/600.perlbench_s-210B.champsimtrace.xz"
+TRACE="ChampSimWrapper/traces/DPC-3/600.perlbench_s-210B.champsimtrace.xz"
 CONFIG_FILE="ChampSimWrapper/config.json"
 
 while [ $# -gt 0 ]; do
@@ -114,7 +114,6 @@ scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 cd "$scriptDir"/ChampSim
 
 # File to store the last modification time for CONFIG_FILE.
-# E.g. /foo/bar/.config.json.timestamp
 TIMESTAMP_FILE="$(dirname "$CONFIG_FILE")/.$(basename "$CONFIG_FILE").timestamp"
 
 # Create a symlink to branch_predictors directory. This is removed at the end.
