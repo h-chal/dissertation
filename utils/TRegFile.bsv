@@ -27,8 +27,7 @@ endinterface
 module mkTRegFile#(Vector#(TExp#(indexSz), dataT) init)
 	(TRegFile#(indexT, dataT, numReadPorts, numWritePorts))
 	provisos (
-        Bits#(indexT, indexSz), PrimIndex#(indexT, indexPrimIndex), Arith#(indexT), Ord#(indexT),
-        // Bits#(dataT, dataSz),
+        Bits#(indexT, indexSz), PrimIndex#(indexT, indexPrimIndex), Arith#(indexT), Ord#(indexT), Bits#(dataT, dataSz)
         // Eq#(dataT)  // for evaluationOutput
     );
 

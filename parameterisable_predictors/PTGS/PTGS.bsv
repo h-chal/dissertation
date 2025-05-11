@@ -1,3 +1,5 @@
+// Partially tagged Gselect
+
 import ISA_Decls::*;
 import Types::*;
 
@@ -8,33 +10,34 @@ import Assert::*;
 import TRegFile::*;
 import ValueWithConfidence::*;
 
-export ParamGSelect(..);
+export PTGS(..);
 export Predict(..);
 export PredictResult(..);
-export mkParamGSelect;
+export mkPTGS;
 
 
 typedef struct {
     tokenT token;
-    resultT prediction;
+    Maybe#(resultT) prediction;
 } PredictResult#(type tokenT, type resultT) deriving(Bits, Eq, FShow);
 
 interface Predict#(type tokenT, type resultT);
     method ActionValue#(PredictResult#(tokenT, resultT)) predict;
 endinterface
 
-interface ParamGSelect#(
+interface PTGS#(
     type resultT,
     type tokenT,
     numeric type numPreds,
     numeric type numPcBits,
     numeric type numGlobalHistoryItems,
     type globalHistoryItemT,
-    numeric type numConfidenceBits
+    numeric type numConfidenceBits,
+    numeric type numTagBits
 );
     method Action nextPc(Addr nextPc);
     interface Vector#(numPreds, Predict#(tokenT, resultT)) predict;
-    method Action update(tokenT token, resultT actual);
+    method Action update(tokenT token, Maybe#(resultT) actual);
     method Action flush;
     method Bool flush_done;
 endinterface
@@ -42,20 +45,38 @@ endinterface
 
 typedef struct {
     indexT index;
-    resultT prediction;
+    Maybe#(resultT) prediction;
     globalHistoryT globalHistory;  // Some redundancy with index.
-} TrainInfo#(type indexT, type resultT, type globalHistoryT) deriving(Bits, Eq, FShow);
+    Bit#(numTagBits) tag;
+} TrainInfo#(type indexT, type resultT, type globalHistoryT, numeric type numTagBits) deriving(Bits, Eq, FShow);
 
 typedef struct {
     tokenT token;
-    Maybe#(resultT) actual;  // Valid if explicit update, Invalid if implicit update.
+    Maybe#(Maybe#(resultT)) actual;  // Valid if explicit update, Invalid if implicit update -- then Valid if should hit, Invalid if should miss
 } UpdateInfo#(type tokenT, type resultT) deriving(Bits);
 
-module mkParamGSelect#(
+typedef struct {
+    Maybe#(ValueWithConfidence#(resultT, numConfidenceBits)) m_vwc;  // "Maybe" allows deletion of entries (validity).
+    Bit#(numTagBits) tag;
+} PredictionTableEntry#(type resultT, numeric type numConfidenceBits, numeric type numTagBits) deriving(Bits);
+
+function Bit#(numBits) extractMask(Addr mask, Addr in);
+    Bit#(numBits) maskedPc = 0;
+    Integer outIndex = 0;
+    for (Integer i = 0; i < valueOf(XLEN); i = i + 1)
+        if (mask[i] == 1) begin
+            maskedPc[outIndex] = in[i];
+            outIndex = outIndex + 1;
+        end
+    return maskedPc;
+endfunction
+
+
+module mkPTGS#(
     Addr pcBitMask,  // Must have numPcBits set bits.
-    resultT defaultPrediction,
-    function globalHistoryItemT makeGlobalHistoryItem(resultT result)  // Which bits of the result to remember for global history.
-) (ParamGSelect#(resultT, tokenT, numPreds, numPcBits, numGlobalHistoryItems, globalHistoryItemT, numConfidenceBits))
+    Addr pcTagBitMask,
+    function globalHistoryItemT makeGlobalHistoryItem(Maybe#(resultT) result)  // Which bits of the result to remember for global history.
+) (PTGS#(resultT, tokenT, numPreds, numPcBits, numGlobalHistoryItems, globalHistoryItemT, numConfidenceBits, numTagBits))
     provisos(
         Alias#(choppedAddr, Bit#(numPcBits)),
         Alias#(globalHistoryT, Vector#(numGlobalHistoryItems, globalHistoryItemT)),
@@ -67,30 +88,30 @@ module mkParamGSelect#(
         Ord#(tokenT),
         PrimIndex#(tokenT, tokenEntries),
         Arith#(tokenT)
-
-        // Eq#(tokenT),  // for TRegFile evaluationOutput
-        // Eq#(globalHistoryItemT)  // for TRegFile evaluationOutput
     );
 
     staticAssert(fromInteger(valueOf(numPcBits)) == countOnes(pcBitMask), "pcBitMask must have numPcBits bits.");
 
-    Reg#(choppedAddr) pcChoppedBase <- mkRegU;
+    Reg#(Addr) pcReg <- mkRegU;
     // The global history of previous results, including predictions.
     Reg#(globalHistoryT) globalHistory <- mkRegU;
     TRegFile#(
         index,
-        ValueWithConfidence#(resultT, numConfidenceBits),
+        PredictionTableEntry#(resultT, numConfidenceBits, numTagBits),
         TAdd#(numPreds, TAdd#(numPreds, 1)),
         TAdd#(numPreds, 1)
-    ) predictionTable <- mkTRegFile(
-        replicate(ValueWithConfidence {value: defaultPrediction, confidence: 0})
-    );
+    ) predictionTable <- mkTRegFile(replicate(
+        PredictionTableEntry {
+            m_vwc: Invalid,
+            tag: ?
+        }
+    ));
     // Registers to store the global history for this superscalar batch.
-    Vector#(numPreds, RWire#(resultT)) batchHistory <- replicateM(mkUnsafeRWire);
+    Vector#(numPreds, RWire#(Maybe#(resultT))) batchHistory <- replicateM(mkUnsafeRWire);
     Ehr#(numPreds, tokenT) currentPredictionToken <- mkEhr(0);
     TRegFile#(
         tokenT,
-        Maybe#(TrainInfo#(index, resultT, globalHistoryT)),
+        Maybe#(TrainInfo#(index, resultT, globalHistoryT, numTagBits)),
         TAdd#(numPreds, 1),
         TAdd#(numPreds, TAdd#(numPreds, 1))
     ) trainInfos <- mkTRegFile(
@@ -108,7 +129,7 @@ module mkParamGSelect#(
         return token;
     endactionvalue;
 
-    function globalHistoryT addGlobalHistory(globalHistoryT gh, resultT new_item);
+    function globalHistoryT addGlobalHistory(globalHistoryT gh, Maybe#(resultT) new_item);
         return shiftOutFromN(makeGlobalHistoryItem(new_item), gh, 1);
     endfunction
     
@@ -132,35 +153,70 @@ module mkParamGSelect#(
     rule doUpdate;
         if (updateInfos[i].wget() matches tagged Valid .updateInfo) begin
             let token = updateInfo.token;
-            let maybeActual = updateInfo.actual;
+            let m_m_actual = updateInfo.actual;
             // Sometimes this method may do nothing (no prediction was made with this token).
             let maybeTrainInfo = trainInfos.read[i].read(token);
             if (maybeTrainInfo matches tagged Valid .trainInfo) begin
                 // mispred used to be given explicitly, this is a way to get it again.
                 Bool mispred;
-                resultT actual;
-                if (maybeActual matches tagged Valid .actual_) begin
-                    mispred = (actual_ != trainInfo.prediction);
-                    actual = actual_;
+                Maybe#(resultT) m_actual;  // This used to be a resultT but became a maybe when I introduced tagged entries.
+                if (m_m_actual matches tagged Valid .m_actual_) begin
+                    mispred = (m_actual_ != trainInfo.prediction);
+                    m_actual = m_actual_;
                 end else begin
                     mispred = False;
                     // Deal with implicit updates (old predictions) by assuming we are correct.
-                    actual = trainInfo.prediction;
+                    m_actual = trainInfo.prediction;
                 end
 
-                // Update value with confidence and signal to store it.
-                let newVwc = updateValueWithConfidence(
-                    predictionTable.read[valueOf(numPreds)+i].read(trainInfo.index),
-                    actual
-                );
-                predictionTable.write[i].write(trainInfo.index, newVwc);
+                let oldPTE = predictionTable.read[valueOf(numPreds)+i].read(trainInfo.index);
+                let m_oldVwc = oldPTE.m_vwc;
+                let newPTE = PredictionTableEntry {m_vwc: Invalid, tag: ?};
+                if (m_actual matches tagged Valid .actual) begin
+                    // Should have hit.
+                    if (oldPTE.tag == trainInfo.tag &&& m_oldVwc matches tagged Valid .oldVwc) begin
+                        let newVwc = updateValueWithConfidence(oldVwc, actual);
+                        newPTE = PredictionTableEntry {
+                            m_vwc: Valid(newVwc),
+                            tag: oldPTE.tag
+                        };
+                    end else begin
+                        // Allow a different tag if confidence is 0 or entry is invalid, otherwise decrement confidence.
+                        if (m_oldVwc matches tagged Valid .oldVwc) begin
+                            if (oldVwc.confidence == 0)
+                                newPTE = PredictionTableEntry {
+                                    m_vwc: Valid(ValueWithConfidence {value: actual, confidence: 0}),
+                                    tag: trainInfo.tag
+                                };
+                            else
+                                newPTE = PredictionTableEntry {
+                                    m_vwc: Valid(ValueWithConfidence {value: oldVwc.value, confidence: oldVwc.confidence - 1}),
+                                    tag: oldPTE.tag
+                                };
+                        end else
+                            newPTE = PredictionTableEntry {
+                                m_vwc: Valid(ValueWithConfidence {value: actual, confidence: 0}),
+                                tag: trainInfo.tag
+                            };
+                    end
+                    
+                end else begin
+                    // Was/would have been correct to miss.
+                    if (oldPTE.tag == trainInfo.tag) begin
+                        newPTE = PredictionTableEntry {
+                            m_vwc: Invalid,
+                            tag: trainInfo.tag
+                        };
+                    end
+                end
+                predictionTable.write[i].write(trainInfo.index, newPTE);
 
                 // Signal deletion of this training info. If it is written to later this deletion does not take effect.
                 trainInfos.write[trainInfosWritePort_deletions + i].write(token, Invalid);
 
                 if (mispred) begin
                     // Rollback global history to before this prediction then add the correct result. 
-                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, actual);
+                    globalHistory <= addGlobalHistory(trainInfo.globalHistory, m_actual);
                     // Remove all other training information since the predictions should not have been made.
                     trainInfos.clear;
                 end
@@ -171,24 +227,29 @@ module mkParamGSelect#(
     function Predict#(tokenT, resultT) superscalarPredict(Integer sup);
         return (interface Predict#(tokenT, resultT);
             method ActionValue#(PredictResult#(tokenT, resultT)) predict;
-                // Get the true PC for this prediction.
-                let pcChopped = pcChoppedBase + fromInteger(sup);
+                // Get the true masked PC for this prediction.
+                Addr pc = pcReg + (fromInteger(sup) << countZerosLSB(pcBitMask));
+                choppedAddr pcChopped = extractMask(pcBitMask, pc);
+                Bit#(numTagBits) tag = extractMask(pcTagBitMask, pc);
 
                 // Account for previous instructions in superscalar batch.
                 let thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);
                 index index = {pcChopped, pack(thisGlobalHistory)};
 
-                let vwc = predictionTable.read[sup].read(index);
-                let prediction = vwc.value;
+                let pte = predictionTable.read[sup].read(index);
+                Maybe#(resultT) prediction = Invalid;
+                if (pte.tag == tag &&& pte.m_vwc matches tagged Valid .vwc)
+                    prediction = Valid(vwc.value);
 
                 // Record that a prediction was made with the result.
                 batchHistory[sup].wset(prediction);
 
                 let predictionToken <- generatePredictionToken(sup);
-                TrainInfo#(index, resultT, globalHistoryT) trainInfo = TrainInfo {
+                TrainInfo#(index, resultT, globalHistoryT, numTagBits) trainInfo = TrainInfo {
                     index: index,
                     prediction: prediction,
-                    globalHistory: thisGlobalHistory
+                    globalHistory: thisGlobalHistory,
+                    tag: tag
                 };
                 trainInfos.write[trainInfosWritePort_preds + sup].write(predictionToken, Valid(trainInfo));
                 // Assume we were correct for a possible prediction this entry replaces.
@@ -203,22 +264,14 @@ module mkParamGSelect#(
     endfunction
     interface predict = genWith(superscalarPredict);
 
-    method Action update(tokenT token, resultT actual);
+    method Action update(tokenT token, Maybe#(resultT) actual);
         updateInfos[valueOf(numPreds)].wset(
             UpdateInfo {token: token, actual: Valid(actual)}
         );
     endmethod
 
     method Action nextPc(Addr pc);
-        // Put masked bits of pc into a register that only holds the masked bits.
-        choppedAddr maskedPc = 0;
-        Integer outIndex = 0;
-        for (Integer i = 0; i < valueOf(XLEN); i = i + 1)
-            if (pcBitMask[i] == 1) begin
-                maskedPc[outIndex] = pc[i];
-                outIndex = outIndex + 1;
-            end
-        pcChoppedBase <= maskedPc;
+        pcReg <= pc;
     endmethod
 
     method flush = noAction;

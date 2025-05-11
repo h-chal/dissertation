@@ -20,7 +20,7 @@ module mkParamGSelectNap(NextAddrPred#(ParamGSelectNapToken));
         Bool,                       // globalHistoryItemT
         1                           // numConfidenceBits
     ) predictor <- mkParamGSelect(
-        'b1110,                    // pcBitMask
+        'b1110,                     // pcBitMask
         Invalid,                    // defaultPrediction
         isValid                     // globalHistoryItemT makeGlobalHistoryItem(resultT result)
     );
