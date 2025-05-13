@@ -71,10 +71,22 @@ function Bit#(numBits) extractMask(Addr mask, Addr in);
     return maskedPc;
 endfunction
 
+function Bit#(numBits) hashExtractMask(Addr mask, Addr in);
+    Bit#(numBits) maskedPc = 0;
+    Integer outIndex = 0;
+    if (valueOf(numBits) > 0) begin
+        for (Integer i = 0; i < valueOf(XLEN); i = i + 1)
+            if (mask[i] == 1) begin
+                maskedPc[outIndex] = maskedPc[outIndex] ^ in[i];
+                outIndex = outIndex < valueOf(numBits)-1 ? outIndex + 1 : 0;
+            end
+    end
+    return maskedPc;
+endfunction
+
 
 module mkPTGS#(
     Addr pcBitMask,  // Must have numPcBits set bits.
-    Addr pcTagBitMask,
     function globalHistoryItemT makeGlobalHistoryItem(Maybe#(resultT) result)  // Which bits of the result to remember for global history.
 ) (PTGS#(resultT, tokenT, numPreds, numPcBits, numGlobalHistoryItems, globalHistoryItemT, numConfidenceBits, numTagBits))
     provisos(
@@ -224,13 +236,14 @@ module mkPTGS#(
         end
     endrule
 
+
     function Predict#(tokenT, resultT) superscalarPredict(Integer sup);
         return (interface Predict#(tokenT, resultT);
             method ActionValue#(PredictResult#(tokenT, resultT)) predict;
                 // Get the true masked PC for this prediction.
                 Addr pc = pcReg + (fromInteger(sup) << countZerosLSB(pcBitMask));
                 choppedAddr pcChopped = extractMask(pcBitMask, pc);
-                Bit#(numTagBits) tag = extractMask(pcTagBitMask, pc);
+                Bit#(numTagBits) tag = hashExtractMask(~pcBitMask, pc);
 
                 // Account for previous instructions in superscalar batch.
                 let thisGlobalHistory <- globalHistoryWithBatchHistoryUpTo(sup);

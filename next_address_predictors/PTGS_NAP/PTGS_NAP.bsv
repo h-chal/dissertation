@@ -12,17 +12,16 @@ typedef UInt#(8) PTGS_NapToken;
 
 module mkPTGS_NAP(NextAddrPred#(PTGS_NapToken));
     PTGS#(
-        Bit#(30),                       // resultT              -- major difference from regular Gselect
+        Bit#(24),                   // resultT              -- major difference from regular Gselect
         PTGS_NapToken,              // tokenT
         SupSizeX2,                  // numPreds
-        11,                          // numPcBits
-        0,                          // numGlobalHistoryItems
+        7,                          // numPcBits
+        4,                          // numGlobalHistoryItems
         Bool,                       // globalHistoryItemT
         1,                          // numConfidenceBits
-        16                           // numTagBits
+        10                          // numTagBits
     ) predictor <- mkPTGS(
-        'b111111111110,                     // pcBitMask
-        'b1111111111111111000000000000,     // pcTagBitMask
+        'b11111110,                 // pcBitMask
         isValid                     // globalHistoryItemT makeGlobalHistoryItem(Maybe#(resultT) result)
     );
 
@@ -32,15 +31,16 @@ module mkPTGS_NAP(NextAddrPred#(PTGS_NapToken));
         return (interface NapPred#(PTGS_NapToken);
             method ActionValue#(NapPredResult#(PTGS_NapToken)) pred;
                 let result <- predictor.predict[sup].predict;
+                Bit#(1) lsb = 0;
                 return NapPredResult {
-                    maybeAddr: isValid(result.prediction) ? Valid({truncateLSB(pc_reg+fromInteger(sup)), validValue(result.prediction)}) : Invalid,
+                    maybeAddr: isValid(result.prediction) ? Valid({truncateLSB(pc_reg+fromInteger(sup)), validValue(result.prediction), lsb}) : Invalid,
                     token: result.token
                 };
             endmethod
         endinterface);
     endfunction
     interface pred = genWith(genPred);
-    method Action update(PTGS_NapToken token, Maybe#(Addr) brTarget) = predictor.update(token, isValid(brTarget) ? Valid(truncate(validValue(brTarget))) : Invalid);
+    method Action update(PTGS_NapToken token, Maybe#(Addr) brTarget) = predictor.update(token, isValid(brTarget) ? Valid((validValue(brTarget)[24:1])) : Invalid);
     method Action put_pc(Addr pc);
         predictor.nextPc(pc);
         pc_reg <= pc;

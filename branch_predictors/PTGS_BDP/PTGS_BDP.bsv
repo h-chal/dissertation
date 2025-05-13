@@ -22,7 +22,6 @@ module mkPTGS_BDP(DirPredictor#(PTGS_BdpToken));
         0                           // numTagBits
     ) predictor <- mkPTGS(
         'b111100,                   // pcBitMask
-        0,                          // pcTagBitMask
         compose(id, validValue)     // globalHistoryItemT makeGlobalHistoryItem(Maybe#(resultT) result)
     );
 
