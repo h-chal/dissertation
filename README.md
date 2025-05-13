@@ -1,3 +1,9 @@
+A note to the examiners on code credit:
+- `TooobaWrapper/filter_known_warnings` was generated with ChatGPT and I take no credit for it. Please imagine it was created by another human;
+- `TooobaWrapper/Toooba` is a submodule containing my fork of Toooba; and
+- `ChampSimWrapper/ChampSim` is a submodule containing my fork of another Part II student's (Blind Grading Number 2373A) fork of ChampSim -- our project were in no way collaborative as this forked work was done before the projects began.
+
+
 Use `BSC_COMPILATION_FLAGS` in `Include_RISCY_Config.mk` to decide which predictors to use, then do `make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim clean` after changing the config.
 E.g.,
 ```
@@ -15,6 +21,11 @@ To run benchmarks, \[TODO\].
 To run RISC-V ISA tests:
 ```
 make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim isa_tests
+```
+
+To run MiBench benchmarks:
+```
+make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim benchmarks
 ```
 
 To run unit tests for my utilities:
