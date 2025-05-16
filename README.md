@@ -3,6 +3,8 @@ A note to the examiners on code credit:
 - `TooobaWrapper/Toooba` is a submodule containing my fork of Toooba; and
 - `ChampSimWrapper/ChampSim` is a submodule containing my fork of another Part II student's (Blind Grading Number 2373A) fork of ChampSim -- our project were in no way collaborative as this forked work was done before the projects began.
 
+The licenses can be found in `TooobaWrapper/Toooba` and `ChampSimWrapper/ChampSim`. I have included notices on modified files or added files/directories indicating such status.
+
 
 Use `BSC_COMPILATION_FLAGS` in `Include_RISCY_Config.mk` to decide which predictors to use, then do `make -C TooobaWrapper/Toooba/builds/RV64ACDFIMSU_Toooba_bluesim clean` after changing the config.
 E.g.,
